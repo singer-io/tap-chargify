@@ -1,0 +1,59 @@
+{
+  "type": [
+    "null",
+    "object"
+  ],
+  "properties": {
+    "id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "key": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "message": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "subscription_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "event_specific_data": {
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "account_transaction_id": {
+          "type": [
+            "null",
+            "number"
+          ]
+        },
+        "product_id": {
+          "type": [
+            "null",
+            "number"
+          ]
+        }
+      }
+    }
+  }
+}

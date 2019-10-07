@@ -1,0 +1,4 @@
+
+class Context():
+    config = {}
+

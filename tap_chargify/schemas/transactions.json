@@ -1,0 +1,171 @@
+{
+  "type": [
+    "null",
+    "object"
+  ],
+  "properties": {
+    "id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "subscription_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "type": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "kind": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "transaction_type": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "success": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "amount_in_cents": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "memo": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "starting_balance_in_cents": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "ending_balance_in_cents": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "gateway_used": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "gateway_transaction_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "gateway_order_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "payment_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "product_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "tax_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "component_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "statement_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "customer_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "item_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "parent_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "role": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "card_number": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "card_expiration": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "card_type": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "refunded_amount_in_cents": {
+      "type": [
+        "null",
+        "number"
+      ]
+    }
+  }
+}

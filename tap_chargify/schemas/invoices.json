@@ -1,0 +1,342 @@
+{
+  "type": [
+    "null",
+    "object"
+  ],
+  "properties": {
+    "id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "subscription_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "statement_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "site_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "state": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "total_amount_in_cents": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "paid_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "amount_due_in_cents": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "number": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "charges": {
+      "type": [
+        "null",
+        "array"
+      ],
+      "items": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "created_at": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "subscription_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "memo": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "kind": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "amount_in_cents": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "ending_balance_in_cents": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "success": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "payment_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "product_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "transaction_type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gateway_transaction_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "gateway_order_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "starting_balance_in_cents": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "component_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "tax_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "customer_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          }
+        }
+      }
+    },
+    "payments_and_credits": {
+      "type": [
+        "null",
+        "array"
+      ],
+      "items": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "created_at": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "subscription_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "memo": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "kind": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "amount_in_cents": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "ending_balance_in_cents": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "success": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "payment_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "product_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "transaction_type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "gateway_transaction_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "gateway_order_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "starting_balance_in_cents": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "component_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "tax_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "customer_id": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "card_number": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "card_expiration": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "card_type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

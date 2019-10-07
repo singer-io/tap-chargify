@@ -1,0 +1,129 @@
+{
+  "type": [
+    "null",
+    "object"
+  ],
+  "properties": {
+    "id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "handle": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "pricing_scheme": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "unit_name": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "unit_price": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "product_family_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "price_per_unit_in_cents": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "kind": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "archived": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "taxable": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "description": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "default_price_point_id": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "price_point_count": {
+      "type": [
+        "null",
+        "number"
+      ]
+    },
+    "price_points_url": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "tax_code": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "recurring": {
+      "type": [
+        "null",
+        "boolean"
+      ]
+    },
+    "upgrade_charge": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "downgrade_credit": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    }
+  }
+}
