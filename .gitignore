@@ -139,7 +139,7 @@ pip-selfcheck.json
 # Tap config.
 catalog*.json
 config*.json
-state*.json
+state.json
 */schemas/fixtures.json
 
 # ds store.
