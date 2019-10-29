@@ -93,7 +93,6 @@ class Stream():
 
     def load_metadata(self):
         return metadata.get_standard_metadata(schema=self.load_schema(), 
-                                              schema_name=self.name, 
                                               key_properties=self.key_properties, 
                                               valid_replication_keys=[self.replication_key], 
                                               replication_method=self.replication_method)
