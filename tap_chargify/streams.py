@@ -167,13 +167,14 @@ class Transactions(Stream):
 class Statements(Stream):
     name = "statements"
     replication_method = "INCREMENTAL"
-    replication_key = "settled_at"
+    replication_key = "updated_at"
 
 
 class Invoices(Stream):
     name = "invoices"
     replication_method = "INCREMENTAL"
     replication_key = "updated_at"
+    # replication_key = "due_date"
     # API endpoint filters only on `due_date`.
 
 
