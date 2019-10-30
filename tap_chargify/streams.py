@@ -110,8 +110,6 @@ class Stream():
             # so store highest value bookmark in session.
             for item in res:
                 # if item is bigger than bookmark, then
-                print(item)
-                print(self.replication_key)
                 if self.is_bookmark_old(state, item[self.replication_key]):
                     self.update_bookmark(state, item[self.replication_key])
                     yield (self.stream, item)
