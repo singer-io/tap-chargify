@@ -7,7 +7,6 @@ import backoff
 import json
 import requests
 import logging
-import time
 from requests.auth import HTTPBasicAuth
 from singer import utils
 from datetime import datetime
@@ -112,7 +111,6 @@ class Chargify(object):
 
   def transactions(self, bookmark=None):
     since_date = utils.strptime_with_tz(bookmark).strftime('%Y-%m-%d')
-    # since_date = time.strftime(utils.strptime_with_tz(bookmark), '%Y-%m-%d')
     # Need to convert bookmark to date string.
     res = self.get("transactions.json?since_date={since_date}&direction=asc".format(since_date=since_date))
     for i in res:
