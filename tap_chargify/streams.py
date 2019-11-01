@@ -61,10 +61,6 @@ class Stream():
             self.session_bookmark = value_in_date_time
 
 
-    # def is_bookmark_old(self, value, bookmark):
-    #     return utils.strptime_with_tz(value) > utils.strptime_with_tz(bookmark)
-
-
     # Reads and converts bookmark from state.
     def get_bookmark(self, state, name=None):
         name = self.name if not name else name
