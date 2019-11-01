@@ -99,13 +99,13 @@
     "cancellation_message": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "cancellation_method": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "cancel_at_end_of_period": {
@@ -117,8 +117,9 @@
     "canceled_at": {
       "type": [
         "null",
-        "number"
-      ]
+        "string"
+      ],
+      "format": "date-time"
     },
     "current_period_started_at": {
       "type": [
@@ -172,7 +173,7 @@
     "reason_code": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "receives_invoice_emails": {
