@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.6
+ * Add pagination [#8](https://github.com/singer-io/tap-chargify/pull/8)
+
 ## 0.0.5
  * Fix schema for subscriptions [#6](https://github.com/singer-io/tap-chargify/pull/6)
 
