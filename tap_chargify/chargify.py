@@ -41,7 +41,7 @@ class Chargify(object):
     uri = "{uri}{path}".format(uri=self.uri, path=path)
     has_more = True
     page = 1
-    per_page = 200
+    per_page = 100
     while has_more:
       params = {
         "page": page,
