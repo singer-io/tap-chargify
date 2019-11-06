@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.7
+ * Change pagesize from 200 to 100 [#10](https://github.com/singer-io/tap-chargify/pull/10)
+ * Update transactions schema, `gateway_transaction_id` is a string [#10](https://github.com/singer-io/tap-chargify/pull/10)
+
 ## 0.0.6
  * Add pagination [#8](https://github.com/singer-io/tap-chargify/pull/8)
 
