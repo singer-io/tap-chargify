@@ -80,7 +80,7 @@
     "gateway_transaction_id": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "gateway_order_id": {
