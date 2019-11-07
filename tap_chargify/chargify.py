@@ -7,10 +7,7 @@ import backoff
 import json
 import requests
 import logging
-<<<<<<< HEAD
 from urllib.parse import urlencode
-=======
->>>>>>> da73a6d... remove time
 from requests.auth import HTTPBasicAuth
 from singer import utils
 from datetime import datetime
@@ -122,16 +119,9 @@ class Chargify(object):
 
   def transactions(self, bookmark=None):
     since_date = utils.strptime_with_tz(bookmark).strftime('%Y-%m-%d')
-<<<<<<< HEAD
     for i in self.get("transactions.json", since_date=since_date, direction="asc"):
       for j in i:
         yield j["transaction"]
-=======
-    # Need to convert bookmark to date string.
-    res = self.get("transactions.json?since_date={since_date}&direction=asc".format(since_date=since_date))
-    for i in res:
-      yield i["transaction"]
->>>>>>> da73a6d... remove time
 
 
   def statements(self, bookmark=None):

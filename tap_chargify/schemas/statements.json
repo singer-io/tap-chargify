@@ -63,7 +63,7 @@
     "customer_billing_zip": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "customer_first_name": {
@@ -117,7 +117,7 @@
     "customer_shipping_zip": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "ending_balance_in_cents": {

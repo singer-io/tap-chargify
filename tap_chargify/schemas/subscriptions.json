@@ -277,7 +277,7 @@
         "zip": {
           "type": [
             "null",
-            "number"
+            "string"
           ]
         },
         "country": {
@@ -631,7 +631,7 @@
         "billing_state": {
           "type": [
             "null",
-            "number"
+            "string"
           ]
         },
         "billing_country": {
@@ -643,7 +643,7 @@
         "billing_zip": {
           "type": [
             "null",
-            "number"
+            "string"
           ]
         },
         "current_vault": {
@@ -655,13 +655,13 @@
         "vault_token": {
           "type": [
             "null",
-            "number"
+            "string"
           ]
         },
         "customer_vault_token": {
           "type": [
             "null",
-            "number"
+            "string"
           ]
         },
         "customer_id": {
