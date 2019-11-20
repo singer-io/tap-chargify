@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.9
+ * Fix schema for invoices [#14](https://github.com/singer-io/tap-chargify/pull/14)
+ * Yield the price_point object instead of the object that contains price_point [#14](https://github.com/singer-io/tap-chargify/pull/14)
+
 ## 0.0.8
  * Change some fields in `subscriptions.json` and `statements.json` to be strings instead of numbers [#12](https://github.com/singer-io/tap-chargify/pull/12)
 
