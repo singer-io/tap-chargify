@@ -91,7 +91,8 @@ class Chargify(object):
         for k in self.get("product_families/{product_family_id}/products.json".format(product_family_id=j["product_family"]["id"])):
           for l in k:
             for o in self.get("products/{product_id}/price_points.json".format(product_id=l["product"]["id"])):
-              yield o
+              for m in o["price_points"]:
+                yield m
 
 
   def coupons(self, bookmark=None):
