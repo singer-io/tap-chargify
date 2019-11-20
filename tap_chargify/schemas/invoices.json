@@ -160,7 +160,7 @@
           "gateway_transaction_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "gateway_order_id": {
@@ -283,7 +283,7 @@
           "gateway_transaction_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "gateway_order_id": {
@@ -320,8 +320,7 @@
             "type": [
               "null",
               "string"
-            ],
-            "format": "date-time"
+            ]
           },
           "card_expiration": {
             "type": [
