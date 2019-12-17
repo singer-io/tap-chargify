@@ -113,7 +113,7 @@ class Chargify(object):
 
 
   def subscriptions(self, bookmark=None):
-    for i in self.get("subscriptions.json", start_datetime=bookmark, date_field="updated_at"):
+    for i in self.get("subscriptions.json", start_datetime=bookmark, direction="asc", date_field="updated_at"):
       for j in i:
         yield j["subscription"]
 

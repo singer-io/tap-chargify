@@ -463,8 +463,9 @@
         "archived_at": {
           "type": [
             "null",
-            "number"
-          ]
+            "string"
+          ],
+          "format": "date-time"
         },
         "update_return_url": {
           "type": [
