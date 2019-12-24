@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.8
+ * Change some fields in `subscriptions.json` and `statements.json` to be strings instead of numbers [#12](https://github.com/singer-io/tap-chargify/pull/12)
+
 ## 0.0.7
  * Change pagesize from 200 to 100 [#10](https://github.com/singer-io/tap-chargify/pull/10)
  * Update transactions schema, `gateway_transaction_id` is a string [#10](https://github.com/singer-io/tap-chargify/pull/10)
