@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.10
+  * Updates schema for subscriptions and changes replication_key [#16](https://github.com/singer-io/tap-chargify/pull/16)
+
 ## 0.0.9
  * Fix schema for invoices [#14](https://github.com/singer-io/tap-chargify/pull/14)
  * Yield the price_point object instead of the object that contains price_point [#14](https://github.com/singer-io/tap-chargify/pull/14)
