@@ -148,8 +148,8 @@ class Components(Stream):
 
 class Subscriptions(Stream):
     name = "subscriptions"
-    replication_method = "INCREMENTAL"
-    replication_key = "updated_at"
+    replication_method = "FULL_TABLE"
+    # replication_key = "updated_at"
 
 
 class Transactions(Stream):
