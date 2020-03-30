@@ -111,7 +111,7 @@
     "cancel_at_end_of_period": {
       "type": [
         "null",
-        "number"
+        "boolean"
       ]
     },
     "canceled_at": {
@@ -149,8 +149,9 @@
     "delayed_cancel_at": {
       "type": [
         "null",
-        "number"
-      ]
+        "string"
+      ],
+      "format": "date-time"
     },
     "coupon_code": {
       "type": [
