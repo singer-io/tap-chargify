@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.11
+  * More schema updates [#20](https://github.com/singer-io/tap-chargify/pull/20)
+
 ## 0.0.10
   * Updates schema for subscriptions and changes replication_key [#16](https://github.com/singer-io/tap-chargify/pull/16)
 
