@@ -1,7 +1,7 @@
 
-# 
+#
 # Module dependencies.
-# 
+#
 
 import os
 import json
@@ -88,9 +88,9 @@ class Stream():
 
 
     def load_metadata(self):
-        return metadata.get_standard_metadata(schema=self.load_schema(), 
-                                              key_properties=self.key_properties, 
-                                              valid_replication_keys=[self.replication_key], 
+        return metadata.get_standard_metadata(schema=self.load_schema(),
+                                              key_properties=self.key_properties,
+                                              valid_replication_keys=[self.replication_key],
                                               replication_method=self.replication_method)
 
 
@@ -102,7 +102,7 @@ class Stream():
         res = get_data(bookmark)
 
         if self.replication_method == "INCREMENTAL":
-            # These streams results may not be ordered, 
+            # These streams results may not be ordered,
             # so store highest value bookmark in session.
             for item in res:
                 # if item is bigger than bookmark, then
@@ -193,5 +193,3 @@ STREAMS = {
     "invoices": Invoices,
     "events": Events
 }
-
-

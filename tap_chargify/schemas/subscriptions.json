@@ -328,7 +328,7 @@
         "vat_number": {
           "type": [
             "null",
-            "number"
+            "string"
           ]
         }
       }
