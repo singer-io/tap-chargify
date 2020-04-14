@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.13
+  * Schema updates [#22](https://github.com/singer-io/tap-chargify/pull/22)
+
 ## 0.0.12
   * Schema updates [#21](https://github.com/singer-io/tap-chargify/pull/21)
 
