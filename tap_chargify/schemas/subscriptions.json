@@ -153,7 +153,7 @@
       ],
       "format": "date-time"
     },
-    "coupon_code": {
+    "coupon_codes": {
       "type": [
         "null",
         "string"
@@ -687,18 +687,6 @@
       ]
     },
     "next_product_id": {
-      "type": [
-        "null",
-        "number"
-      ]
-    },
-    "coupon_use_count": {
-      "type": [
-        "null",
-        "number"
-      ]
-    },
-    "coupon_uses_allowed": {
       "type": [
         "null",
         "number"
