@@ -162,8 +162,8 @@ class Transactions(Stream):
 
 class Statements(Stream):
     name = "statements"
-    replication_method = "INCREMENTAL"
-    replication_key = "updated_at"
+    replication_method = "FULL_TABLE"
+    # replication_key = "updated_at"
 
 
 class Invoices(Stream):
