@@ -283,7 +283,7 @@
           "gateway_order_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "payment_id": {

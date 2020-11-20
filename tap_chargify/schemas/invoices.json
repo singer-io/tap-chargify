@@ -166,7 +166,7 @@
           "gateway_order_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "starting_balance_in_cents": {
@@ -289,7 +289,7 @@
           "gateway_order_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "starting_balance_in_cents": {
