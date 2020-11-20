@@ -186,7 +186,7 @@
     "net_terms": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "customer": {
