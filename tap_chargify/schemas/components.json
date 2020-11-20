@@ -49,7 +49,7 @@
     "price_per_unit_in_cents": {
       "type": [
         "null",
-        "string"
+        "integer"
       ]
     },
     "kind": {

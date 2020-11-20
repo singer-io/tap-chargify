@@ -31,7 +31,7 @@
     "amount_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "product_family_id": {

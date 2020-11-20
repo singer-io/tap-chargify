@@ -43,7 +43,7 @@
     "amount_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "memo": {
@@ -62,13 +62,13 @@
     "starting_balance_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "ending_balance_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "gateway_used": {
@@ -164,7 +164,7 @@
     "refunded_amount_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     }
   }

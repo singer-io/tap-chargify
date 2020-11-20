@@ -37,7 +37,7 @@
     "total_amount_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "paid_at": {
@@ -64,7 +64,7 @@
     "amount_due_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "number": {
@@ -118,13 +118,13 @@
           "amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "ending_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "success": {
@@ -172,7 +172,7 @@
           "starting_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "component_id": {
@@ -241,13 +241,13 @@
           "amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "ending_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "success": {
@@ -295,7 +295,7 @@
           "starting_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "component_id": {
