@@ -168,7 +168,7 @@
     "snap_day": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "reason_code": {
