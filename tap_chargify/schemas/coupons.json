@@ -114,7 +114,7 @@
     "conversion_limit": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "stackable": {
