@@ -7,7 +7,7 @@
     "id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "state": {
@@ -234,7 +234,7 @@
         "id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "created_at": {
@@ -342,7 +342,7 @@
         "id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "name": {
@@ -489,7 +489,7 @@
             "id": {
               "type": [
                 "null",
-                "number"
+                "integer"
               ]
             },
             "name": {
@@ -532,7 +532,7 @@
               "id": {
                 "type": [
                   "null",
-                  "number"
+                  "integer"
                 ]
               },
               "url": {
@@ -567,7 +567,7 @@
         "id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "payment_type": {
@@ -669,7 +669,7 @@
         "customer_id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         }
       }
@@ -689,13 +689,13 @@
     "next_product_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "stored_credential_transaction_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     }
   }

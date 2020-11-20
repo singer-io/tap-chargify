@@ -7,25 +7,25 @@
     "id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "subscription_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "statement_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "site_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "state": {
@@ -94,7 +94,7 @@
           "subscription_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "type": {
@@ -136,19 +136,19 @@
           "id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "payment_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "product_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "transaction_type": {
@@ -178,19 +178,19 @@
           "component_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "tax_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "customer_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           }
         }
@@ -217,7 +217,7 @@
           "subscription_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "type": {
@@ -259,19 +259,19 @@
           "id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "payment_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "product_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "transaction_type": {
@@ -301,19 +301,19 @@
           "component_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "tax_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "customer_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "card_number": {
