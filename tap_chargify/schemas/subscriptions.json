@@ -37,7 +37,7 @@
     "product_version_number": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "current_period_ends_at": {
