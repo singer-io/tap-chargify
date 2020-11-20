@@ -378,7 +378,7 @@
         "interval": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "interval_unit": {
@@ -396,7 +396,7 @@
         "expiration_interval": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "expiration_interval_unit": {
@@ -414,7 +414,7 @@
         "trial_interval": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "trial_interval_unit": {
