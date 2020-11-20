@@ -37,7 +37,7 @@
     "unit_price": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "product_family_id": {
