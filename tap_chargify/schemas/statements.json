@@ -131,7 +131,20 @@
         "null",
         "array"
       ],
-      "items": {}
+      "items": {
+        "type": [
+          "null", 
+          "object"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          }
+        }
+      }
     },
     "html_view": {
       "type": [
@@ -351,7 +364,17 @@
               "null",
               "array"
             ],
-            "items": {}
+            "items": {
+              "type": ["null", "object"],
+              "properties": {
+                "id": {
+                  "type": [
+                    "null", 
+                    "integer"
+                  ]
+                }
+              }
+            }
           }
         }
       }
