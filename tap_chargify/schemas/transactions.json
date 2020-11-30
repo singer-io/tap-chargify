@@ -7,13 +7,13 @@
     "id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "subscription_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "type": {
@@ -43,7 +43,7 @@
     "amount_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "memo": {
@@ -62,13 +62,13 @@
     "starting_balance_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "ending_balance_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "gateway_used": {
@@ -92,37 +92,37 @@
     "payment_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "product_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "tax_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "component_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "statement_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "customer_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "item_name": {
@@ -134,7 +134,7 @@
     "parent_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "role": {
@@ -164,7 +164,7 @@
     "refunded_amount_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     }
   }

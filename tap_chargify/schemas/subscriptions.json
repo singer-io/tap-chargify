@@ -7,7 +7,7 @@
     "id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "state": {
@@ -19,25 +19,25 @@
     "balance_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "total_revenue_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "product_price_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "product_version_number": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "current_period_ends_at": {
@@ -143,7 +143,7 @@
     "signup_revenue": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "delayed_cancel_at": {
@@ -168,7 +168,7 @@
     "snap_day": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "reason_code": {
@@ -186,7 +186,7 @@
     "net_terms": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "customer": {
@@ -228,13 +228,13 @@
         "reference": {
           "type": [
             "null",
-            "number"
+            "string"
           ]
         },
         "id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "created_at": {
@@ -342,7 +342,7 @@
         "id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "name": {
@@ -372,13 +372,13 @@
         "price_in_cents": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "interval": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "interval_unit": {
@@ -390,13 +390,13 @@
         "initial_charge_in_cents": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "expiration_interval": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "expiration_interval_unit": {
@@ -408,13 +408,13 @@
         "trial_price_in_cents": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "trial_interval": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "trial_interval_unit": {
@@ -489,7 +489,7 @@
             "id": {
               "type": [
                 "null",
-                "number"
+                "integer"
               ]
             },
             "name": {
@@ -507,7 +507,7 @@
             "accounting_code": {
               "type": [
                 "null",
-                "number"
+                "string"
               ]
             },
             "description": {
@@ -532,7 +532,7 @@
               "id": {
                 "type": [
                   "null",
-                  "number"
+                  "integer"
                 ]
               },
               "url": {
@@ -567,7 +567,7 @@
         "id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "payment_type": {
@@ -669,7 +669,7 @@
         "customer_id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         }
       }
@@ -689,13 +689,13 @@
     "next_product_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "stored_credential_transaction_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     }
   }

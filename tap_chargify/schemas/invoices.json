@@ -7,25 +7,25 @@
     "id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "subscription_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "statement_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "site_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "state": {
@@ -37,7 +37,7 @@
     "total_amount_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "paid_at": {
@@ -64,13 +64,13 @@
     "amount_due_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "number": {
       "type": [
         "null",
-        "number"
+        "string"
       ]
     },
     "charges": {
@@ -94,7 +94,7 @@
           "subscription_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "type": {
@@ -118,13 +118,13 @@
           "amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "ending_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "success": {
@@ -136,19 +136,19 @@
           "id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "payment_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "product_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "transaction_type": {
@@ -166,31 +166,31 @@
           "gateway_order_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "starting_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "component_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "tax_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "customer_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           }
         }
@@ -217,7 +217,7 @@
           "subscription_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "type": {
@@ -241,13 +241,13 @@
           "amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "ending_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "success": {
@@ -259,19 +259,19 @@
           "id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "payment_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "product_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "transaction_type": {
@@ -289,31 +289,31 @@
           "gateway_order_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "starting_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "component_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "tax_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "customer_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "card_number": {

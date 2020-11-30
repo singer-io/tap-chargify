@@ -7,7 +7,7 @@
     "id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "key": {
@@ -25,7 +25,7 @@
     "subscription_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "created_at": {
@@ -44,13 +44,13 @@
         "account_transaction_id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         },
         "product_id": {
           "type": [
             "null",
-            "number"
+            "integer"
           ]
         }
       }
