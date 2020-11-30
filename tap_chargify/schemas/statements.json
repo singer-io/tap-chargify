@@ -7,7 +7,7 @@
     "id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "basic_html_view": {
@@ -123,7 +123,7 @@
     "ending_balance_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "future_payments": {
@@ -162,13 +162,13 @@
     "starting_balance_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "subscription_id": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "text_view": {
@@ -187,7 +187,7 @@
     "total_in_cents": {
       "type": [
         "null",
-        "number"
+        "integer"
       ]
     },
     "transactions": {
@@ -204,13 +204,13 @@
           "id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "subscription_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "type": {
@@ -240,7 +240,7 @@
           "amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "memo": {
@@ -259,13 +259,13 @@
           "starting_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "ending_balance_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "gateway_used": {
@@ -283,43 +283,43 @@
           "gateway_order_id": {
             "type": [
               "null",
-              "number"
+              "string"
             ]
           },
           "payment_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "product_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "tax_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "component_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "statement_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "customer_id": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "item_name": {
@@ -331,19 +331,19 @@
           "original_amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "discount_amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "taxable_amount_in_cents": {
             "type": [
               "null",
-              "number"
+              "integer"
             ]
           },
           "taxations": {
@@ -376,7 +376,7 @@
               "id": {
                 "type": [
                   "null",
-                  "number"
+                  "integer"
                 ]
               },
               "key": {
@@ -394,7 +394,7 @@
               "subscription_id": {
                 "type": [
                   "null",
-                  "number"
+                  "integer"
                 ]
               },
               "created_at": {
@@ -413,13 +413,13 @@
                   "product_id": {
                     "type": [
                       "null",
-                      "number"
+                      "integer"
                     ]
                   },
                   "account_transaction_id": {
                     "type": [
                       "null",
-                      "number"
+                      "integer"
                     ]
                   }
                 }
