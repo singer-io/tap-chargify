@@ -206,7 +206,32 @@
         "null",
         "array"
       ],
-      "items": {}
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "return_url": {
+            "type": [
+              "null", 
+              "string"
+            ]
+          },
+          "return_params": {
+            "type": [
+              "null", 
+              "string"
+            ]
+          },
+          "url": {
+            "type": [
+              "null", 
+              "string"
+            ]
+          }
+        } 
+      }
     }
   }
 }
