@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.15
+  * Schema updates [#30](https://github.com/singer-io/tap-chargify/pull/30)
+  * Schema updates [#31](https://github.com/singer-io/tap-chargify/pull/31)
+
 ## 0.0.14
   * Switch Statements stream to full table [#23](https://github.com/singer-io/tap-chargify/pull/23)
 
