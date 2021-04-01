@@ -113,6 +113,17 @@ class Stream():
                 yield (self.stream, item)
 
 
+class BookmarkIdMixin():
+    def is_bookmark_old(self, state, value, name=None):
+        current_bookmark = self.get_bookmark(state, name)
+        if isinstance(current_bookmark, int):
+            return value > int(current_bookmark)
+        else:
+            # This is the initial value from the Context (a datetime) so we consider it old
+            # so the bookmark will be replaced by the current value
+            return True
+
+
 
 class Customers(Stream):
     name = "customers"
@@ -151,12 +162,10 @@ class Subscriptions(Stream):
     replication_key = "updated_at"
 
 
-class Transactions(Stream):
+class Transactions(BookmarkIdMixin, Stream):
     name = "transactions"
     replication_method = "INCREMENTAL"
-    replication_key = "created_at"
-    # since API endpoint filter is only on date (and not datetime),
-    # make sure to filter out redundant rows.
+    replication_key = "id"
 
 
 class Statements(Stream):

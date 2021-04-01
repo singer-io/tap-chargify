@@ -119,8 +119,18 @@ class Chargify(object):
 
 
   def transactions(self, bookmark=None):
-    since_date = utils.strptime_with_tz(bookmark).strftime('%Y-%m-%d')
-    for i in self.get("transactions.json", since_date=since_date, direction="asc"):
+    # bookmark can be an id (regular case)
+    if isinstance(bookmark, int):
+      kwargs = {
+        "since_id": bookmark
+      }
+    # or a datetime (no saved state, only the start_date from the Context
+    else:
+      since_date = utils.strptime_with_tz(bookmark).strftime('%Y-%m-%d')
+      kwargs = {
+        "since_date": since_date
+      }
+    for i in self.get("transactions.json", direction="asc", **kwargs):
       for j in i:
         yield j["transaction"]
 
