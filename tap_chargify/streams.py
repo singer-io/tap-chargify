@@ -132,7 +132,8 @@ class Customers(Stream):
 
 class ProductFamilies(Stream):
     name = "product_families"
-    replication_method = "FULL_TABLE"
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
 
 
 class Products(Stream):
