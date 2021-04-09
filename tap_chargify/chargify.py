@@ -70,12 +70,10 @@ class Chargify(object):
       for j in i:
         yield j["customer"]
 
-
   def product_families(self, bookmark=None):
     for i in self.get("product_families.json"):
       for j in i:
         yield j["product_family"]
-
 
   def products(self, bookmark=None):
     for i in self.get("product_families.json"):
@@ -83,7 +81,6 @@ class Chargify(object):
         for j in self.get("product_families/{product_family_id}/products.json".format(product_family_id=k["product_family"]["id"])):
           for l in j:
             yield l["product"]
-
 
   def price_points(self, bookmark=None):
     for i in self.get("product_families.json"):
@@ -94,14 +91,12 @@ class Chargify(object):
               for m in o["price_points"]:
                 yield m
 
-
   def coupons(self, bookmark=None):
     for i in self.get("product_families.json"):
       for k in i:
         for j in self.get("product_families/{product_family_id}/coupons.json".format(product_family_id=k["product_family"]["id"])):
           for l in j:
             yield l["coupon"]
-
 
   def components(self, bookmark=None):
     for i in self.get("product_families.json"):
@@ -110,13 +105,10 @@ class Chargify(object):
           for l in j:
             yield l["component"]
 
-
-
   def subscriptions(self, bookmark=None):
     for i in self.get("subscriptions.json", start_datetime=bookmark, date_field="updated_at", sort="updated_at", direction="asc"):
       for j in i:
         yield j["subscription"]
-
 
   def transactions(self, bookmark=None):
     # bookmark can be an id (regular case)
@@ -134,13 +126,11 @@ class Chargify(object):
       for j in i:
         yield j["transaction"]
 
-
   def statements(self, bookmark=None):
     settled_since = mktime(utils.strptime_with_tz(bookmark).timetuple())
     for i in self.get("statements.json", sort="settled_at", direction="asc", settled_since=settled_since):
       for j in i:
         yield j["statement"]
-
 
   def invoices(self, bookmark=None):
     start_date = utils.strptime_with_tz(bookmark).strftime('%Y-%m-%d')
@@ -148,12 +138,7 @@ class Chargify(object):
       for j in i:
         yield j["invoice"]
 
-
   def events(self, bookmark=None):
     for i in self.get("events.json"):
       for j in i:
         yield j["event"]
-
-
-
-
