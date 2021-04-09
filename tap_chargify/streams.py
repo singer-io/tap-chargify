@@ -124,11 +124,10 @@ class BookmarkIdMixin():
             return True
 
 
-
 class Customers(Stream):
     name = "customers"
-    replication_method = "FULL_TABLE"
-    # incremental
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
 
 
 class ProductFamilies(Stream):

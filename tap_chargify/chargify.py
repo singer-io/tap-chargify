@@ -66,7 +66,7 @@ class Chargify(object):
   # 
 
   def customers(self, bookmark=None):
-    for i in self.get("customers.json"):
+    for i in self.get("customers.json", sort="asc", date_field="updated_at", start_datetime=bookmark):
       for j in i:
         yield j["customer"]
 
