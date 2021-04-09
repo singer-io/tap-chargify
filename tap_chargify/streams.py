@@ -182,10 +182,10 @@ class Invoices(Stream):
     # API endpoint filters only on `due_date`.
 
 
-class Events(Stream):
+class Events(BookmarkIdMixin, Stream):
     name = "events"
-    replication_method = "FULL_TABLE"
-
+    replication_method = "INCREMENTAL"
+    replication_key = "id"
 
 
 STREAMS = {

@@ -139,6 +139,17 @@ class Chargify(object):
         yield j["invoice"]
 
   def events(self, bookmark=None):
-    for i in self.get("events.json"):
+    # bookmark can be an id (regular case)
+    if isinstance(bookmark, int):
+      kwargs = {
+        "since_id": bookmark
+      }
+    # or a datetime (no saved state, only the start_date from the Context)
+    else:
+      kwargs = {
+        "start_datetime": bookmark,
+        "date_field": "created_at"
+      }
+    for i in self.get("events.json", direction="asc", **kwargs):
       for j in i:
         yield j["event"]
