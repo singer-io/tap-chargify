@@ -78,7 +78,8 @@ class Chargify(object):
   def products(self, bookmark=None):
     for i in self.get("product_families.json"):
       for k in i:
-        for j in self.get("product_families/{product_family_id}/products.json".format(product_family_id=k["product_family"]["id"])):
+        for j in self.get("product_families/{product_family_id}/products.json".format(product_family_id=k["product_family"]["id"]),
+                          sort="asc", date_field="updated_at", start_datetime=bookmark):
           for l in j:
             yield l["product"]
 
