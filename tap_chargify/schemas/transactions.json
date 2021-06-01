@@ -166,6 +166,48 @@
         "null",
         "integer"
       ]
+    },
+    "period_range_start": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "period_range_end": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "price_point_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "price_point_handle": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "component_handle": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "component_price_point_id": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },
+    "component_price_point_handle": {
+      "type": [
+        "null",
+        "string"
+      ]
     }
   }
 }
