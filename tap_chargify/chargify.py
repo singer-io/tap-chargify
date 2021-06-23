@@ -95,7 +95,7 @@ class Chargify(object):
                 yield m
                 
                 
-  def components_price_points(self, bookmark=None):
+  def component_price_points(self, bookmark=None):
   for i in self.get("product_families.json"):
     for j in i:
       for k in self.get("product_families/{product_family_id}/components.json".format(product_family_id=j["product_family"]["id"])):
