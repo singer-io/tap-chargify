@@ -11,13 +11,13 @@ setup(
     py_modules=["tap_chargify"],
     install_requires=[
         "singer-python==5.6.1",
-        "requests==2.20.0"
+        "requests==2.31.0"
     ],
     extras_require={
         'dev': [
             'pylint',
             'ipdb',
-            'requests==2.20.0'
+            'requests==2.31.0'
         ]
     },
     entry_points="""
