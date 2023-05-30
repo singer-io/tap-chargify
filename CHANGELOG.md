@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.18
+  * Dependabot update [#48](https://github.com/singer-io/tap-chargify/pull/48)
+
 # 0.0.17
   * Schema updates [#41](https://github.com/singer-io/tap-chargify/pull/41)
 
