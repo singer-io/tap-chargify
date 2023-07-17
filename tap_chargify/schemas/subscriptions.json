@@ -316,8 +316,9 @@
         "portal_invite_last_accepted_at": {
           "type": [
             "null",
-            "number"
-          ]
+            "string"
+          ],
+          "format": "date-time"
         },
         "tax_exempt": {
           "type": [
