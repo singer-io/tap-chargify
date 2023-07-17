@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.0
+ * Update `portal_invite_last_accepted_at` field type to date-time [#49] (https://github.com/singer-io/tap-chargify/pull/49)
+
 # 0.0.17
   * Schema updates [#41](https://github.com/singer-io/tap-chargify/pull/41)
 
