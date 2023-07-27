@@ -144,6 +144,11 @@ class Coupons(Stream):
 class Components(Stream):
     name = "components"
     replication_method = "FULL_TABLE"
+    
+    
+ class ComponentPricePoints(Stream):
+    name = "component_price_points"
+    replication_method = "FULL_TABLE"
 
 
 class Subscriptions(Stream):
@@ -187,6 +192,7 @@ STREAMS = {
     "price_points": PricePoints,
     "coupons": Coupons,
     "components": Components,
+    "component_price_points": ComponentPricePoints,
     "subscriptions": Subscriptions,
     "transactions": Transactions,
     "statements": Statements,
