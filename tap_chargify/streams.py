@@ -102,33 +102,44 @@ class Stream():
         res = get_data(bookmark)
 
         if self.replication_method == "INCREMENTAL":
-            # These streams results may not be ordered,
-            # so store highest value bookmark in session.
+            # We make sure in the request to the Chargify API that all incremental streams are
+            # ordered and filtered to have only records newer than the bookmark
+            # All the records can then be returned
             for item in res:
-                # if item is bigger than bookmark, then
-                if self.is_bookmark_old(state, item[self.replication_key]):
-                    self.update_bookmark(state, item[self.replication_key])
-                    yield (self.stream, item)
+                self.update_bookmark(state, item[self.replication_key])
+                yield (self.stream, item)
         else:
             for item in res:
                 yield (self.stream, item)
 
 
+class BookmarkIdMixin():
+    def is_bookmark_old(self, state, value, name=None):
+        current_bookmark = self.get_bookmark(state, name)
+        if isinstance(current_bookmark, int):
+            return value > int(current_bookmark)
+        else:
+            # This is the initial value from the Context (a datetime) so we consider it old
+            # so the bookmark will be replaced by the current value
+            return True
+
 
 class Customers(Stream):
     name = "customers"
-    replication_method = "FULL_TABLE"
-    # incremental
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
 
 
 class ProductFamilies(Stream):
     name = "product_families"
-    replication_method = "FULL_TABLE"
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
 
 
 class Products(Stream):
     name = "products"
-    replication_method = "FULL_TABLE"
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
 
 
 class PricePoints(Stream):
@@ -148,16 +159,14 @@ class Components(Stream):
 
 class Subscriptions(Stream):
     name = "subscriptions"
-    replication_method = "FULL_TABLE"
-    # replication_key = "updated_at"
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
 
 
-class Transactions(Stream):
+class Transactions(BookmarkIdMixin, Stream):
     name = "transactions"
     replication_method = "INCREMENTAL"
-    replication_key = "created_at"
-    # since API endpoint filter is only on date (and not datetime),
-    # make sure to filter out redundant rows.
+    replication_key = "id"
 
 
 class Statements(Stream):
@@ -174,10 +183,10 @@ class Invoices(Stream):
     # API endpoint filters only on `due_date`.
 
 
-class Events(Stream):
+class Events(BookmarkIdMixin, Stream):
     name = "events"
-    replication_method = "FULL_TABLE"
-
+    replication_method = "INCREMENTAL"
+    replication_key = "id"
 
 
 STREAMS = {

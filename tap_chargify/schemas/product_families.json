@@ -33,6 +33,20 @@
         "null",
         "string"
       ]
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
     }
   }
 }

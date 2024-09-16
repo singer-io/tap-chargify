@@ -60,22 +60,40 @@
           ],
           "properties": {
             "state": {
-              "type": "string"
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "subscription_id": {
-              "type": "integer"
+              "type": [
+                "null",
+                "integer"
+              ]
             },
             "created_at": {
-              "type": "string"
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "revenue_at_risk_in_cents": {
-              "type": "integer"
+              "type": [
+                "null",
+                "integer"
+              ]
             },
             "attempts": {
-              "type": "integer"
+              "type": [
+                "null",
+                "integer"
+              ]
             },
             "last_attempted_at": {
-              "type": "string"
+              "type": [
+                "null",
+                "string"
+              ]
             }
           }
         },
@@ -86,28 +104,52 @@
           ],
           "properties": {
             "day_threshold": {
-              "type": "integer"
+              "type": [
+                "null",
+                "integer"
+              ]
             },
             "action": {
-              "type": "string"
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "email_body": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "email_subject": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "send_email": {
-              "type": "boolean"
+              "type": [
+                "null",
+                "boolean"
+              ]
             },
             "send_bcc_email": {
-              "type": "boolean"
+              "type": [
+                "null",
+                "boolean"
+              ]
             },
             "send_sms": {
-              "type": "boolean"
+              "type": [
+                "null",
+                "boolean"
+              ]
             },
             "sms_body": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           }
         },
@@ -118,42 +160,78 @@
           ],
           "properties": {
             "day_threshold": {
-              "type": "integer"
+              "type": [
+                "null",
+                "integer"
+              ]
             },
             "action": {
-              "type": "string"
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "email_body": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "email_subject": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             },
             "send_email": {
-              "type": "boolean"
+              "type": [
+                "null",
+                "boolean"
+              ]
             },
             "send_bcc_email": {
-              "type": "boolean"
+              "type": [
+                "null",
+                "boolean"
+              ]
             },
             "send_sms": {
-              "type": "boolean"
+              "type": [
+                "null",
+                "boolean"
+              ]
             },
             "sms_body": {
-              "type": ["null", "string"]
+              "type": [
+                "null",
+                "string"
+              ]
             }
           }
         },
         "previous_subscription_state": {
-          "type": ["null", "string"]
+          "type": [
+            "null",
+            "string"
+          ]
         },
         "new_subscription_state": {
-          "type": ["null", "string"]
+          "type": [
+            "null",
+            "string"
+          ]
         },
         "previous_product_id": {
-          "type": ["null", "integer"]
+          "type": [
+            "null",
+            "integer"
+          ]
         },
         "new_product_id": {
-          "type": ["null", "integer"]
+          "type": [
+            "null",
+            "integer"
+          ]
         }
       }
     }
