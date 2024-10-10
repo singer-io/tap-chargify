@@ -135,6 +135,7 @@ class Chargify(object):
   def invoices(self, bookmark=None):
     start_date = utils.strptime_with_tz(bookmark).strftime('%Y-%m-%d')
     for i in self.get("invoices.json", start_date=start_date, direction="asc"):
+      raise Exception(i)
       for j in i:
         yield j["invoice"]
 
