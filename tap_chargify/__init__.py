@@ -87,6 +87,3 @@ def main():
     elif parsed_args.catalog:
         state = parsed_args.state or {}
         sync(client, parsed_args.catalog, state)
-
-
-
