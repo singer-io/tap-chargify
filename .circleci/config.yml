@@ -26,8 +26,14 @@ jobs:
       - run:
           name: 'Integration Tests'
           command: |
-            source /usr/local/share/virtualenvs/tap-chargify/bin/activate
-            python -m unittest discover tests
+            source /usr/local/share/virtualenvs/tap-tester/bin/activate
+            uv pip install --upgrade awscli
+            uv pip install .
+            uv pip install pytest
+            aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/tap_tester_sandbox dev_env.sh
+            source dev_env.sh
+            unset USE_STITCH_BACKEND
+            run-test --tap=tap-chargify tests
 workflows:
   version: 2
   commit:
