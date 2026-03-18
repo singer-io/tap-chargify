@@ -1,5 +1,10 @@
-from base import ChargifyBaseTest
+import unittest
+from unittest.mock import MagicMock
+
+from base import ChargifyBaseTest, ChargifyBaseMockTest
 from tap_tester.base_suite_tests.start_date_test import StartDateTest
+from tap_chargify.streams import Invoices
+from tap_chargify.context import Context
 
 
 class ChargifyStartDateTest(StartDateTest, ChargifyBaseTest):
@@ -37,3 +42,27 @@ class ChargifyStartDateTest(StartDateTest, ChargifyBaseTest):
         # 2026-02-01T10:30:00+00:00, and .strftime("%Y-%m-%d") = "2026-02-01", so
         # the tap correctly queries since_date=2026-02-01 for the second sync.
         return "2026-02-01T10:30:00.000000Z"
+
+
+class StartDateIntegrationMockTest(ChargifyBaseMockTest, unittest.TestCase):
+    """Mock-based start date tests: verify streams use start_date / bookmark
+    as the API filter without any network calls."""
+
+    def test_get_bookmark_uses_start_date_when_state_missing(self):
+        stream = Invoices(MagicMock())
+        state = {}
+        bookmark = stream.get_bookmark(state)
+        self.assertEqual(bookmark, self.default_start_date)
+
+    def test_sync_calls_client_with_start_date_when_no_bookmark(self):
+        mock_client = MagicMock()
+        stream = Invoices(mock_client)
+        state = {}
+        record = {"id": 100, "due_date": "2025-04-20T10:30:00Z"}
+        mock_client.invoices.return_value = iter([record])
+
+        results = list(stream.sync(state))
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0][1]["due_date"], "2025-04-20T10:30:00Z")
+        mock_client.invoices.assert_called_once_with(Context.config["start_date"])
