@@ -47,6 +47,13 @@
       ],
       "format": "date-time"
     },
+    "due_date": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date"
+    },
     "created_at": {
       "type": [
         "null",

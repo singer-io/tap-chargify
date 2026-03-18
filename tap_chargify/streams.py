@@ -88,10 +88,22 @@ class Stream():
 
 
     def load_metadata(self):
-        return metadata.get_standard_metadata(schema=self.load_schema(),
-                                              key_properties=self.key_properties,
-                                              valid_replication_keys=[self.replication_key],
-                                              replication_method=self.replication_method)
+        mdata = metadata.get_standard_metadata(
+            schema=self.load_schema(),
+            key_properties=self.key_properties,
+            valid_replication_keys=[self.replication_key] if self.replication_key else None,
+            replication_method=self.replication_method
+        )
+        if self.replication_key:
+            mdata = metadata.to_list(
+                metadata.write(
+                    metadata.to_map(mdata),
+                    ('properties', self.replication_key),
+                    'inclusion',
+                    'automatic'
+                )
+            )
+        return mdata
 
 
     # The main sync function.
