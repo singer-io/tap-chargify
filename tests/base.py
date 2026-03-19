@@ -1,9 +1,20 @@
+import itertools
 import json
 import os
+import tempfile
 
 from tap_tester import connections, menagerie, runner
 from tap_tester.logger import LOGGER
 from tap_tester.base_suite_tests.base_case import BaseCase
+
+# Patch template: limits pages per endpoint; injected as a wrapper tap subprocess.
+_WRAPPER_TEMPLATE = """\
+{shebang}
+import itertools, tap_chargify.chargify as _m
+_orig = _m.Chargify.get
+_m.Chargify.get = lambda self, p, stream=True, **kw: itertools.islice(_orig(self, p, stream=stream, **kw), {max_pages})
+from tap_chargify import main; main()
+"""
 
 
 class ChargifyBaseTest(BaseCase):
@@ -14,6 +25,35 @@ class ChargifyBaseTest(BaseCase):
     """
 
     start_date = "2025-01-01T00:00:00Z"
+    MAX_PAGES = int(os.environ.get("TAP_CHARGIFY_MAX_PAGES", "5"))
+    _wrapper_path = None
+    _original_tap_path = None
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        real_tap = os.environ.get("STITCH_TAP_PATH", "")
+        if not real_tap or not os.path.isfile(real_tap):
+            return
+        with open(real_tap, "rb") as f:
+            first_line = f.readline().decode("utf-8", errors="replace").strip()
+        shebang = first_line if first_line.startswith("#!") else "#!/usr/bin/env python3"
+        fd, path = tempfile.mkstemp(suffix=".py", prefix="tap_chargify_wrapper_")
+        with os.fdopen(fd, "w") as f:
+            f.write(_WRAPPER_TEMPLATE.format(shebang=shebang, max_pages=cls.MAX_PAGES))
+        os.chmod(path, 0o755)
+        cls._wrapper_path, cls._original_tap_path = path, real_tap
+        os.environ["STITCH_TAP_PATH"] = path
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls._original_tap_path:
+            os.environ["STITCH_TAP_PATH"] = cls._original_tap_path
+            cls._original_tap_path = None
+        if cls._wrapper_path:
+            os.unlink(cls._wrapper_path)
+            cls._wrapper_path = None
+        super().tearDownClass()
 
     @staticmethod
     def tap_name():
