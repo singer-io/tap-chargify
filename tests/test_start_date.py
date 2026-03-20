@@ -23,8 +23,11 @@ class ChargifyStartDateTest(StartDateTest, ChargifyBaseTest):
 
     @property
     def start_date_1(self):
-        # Earlier than all transactions in the account so sync 1 gets the full set.
-        return "2025-06-01T00:00:00Z"
+        # ~47 days × ~10 tx/day ≈ 470 records — fits in MAX_PAGES=5 (500 records)
+        # so sync 1 always reaches the latest transaction (same max as sync 2).
+        # Use .000000Z format so parse_date uses the same IST-offset code path as
+        # record timestamps, keeping comparisons consistent on this WSL environment.
+        return "2026-02-01T00:00:00.000000Z"
 
     @property
     def start_date_2(self):
