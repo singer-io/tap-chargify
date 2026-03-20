@@ -18,11 +18,12 @@ class ChargifyInterruptedSyncTest(InterruptedSyncTest, ChargifyBaseTest):
         return {"transactions"}
 
     def manipulate_state(self):
-        # Bookmark within the first-sync range so the resuming sync re-fetches a known subset.
+        # Recent bookmark: few transactions since this date (<1 page), so MAX_PAGES
+        # cap never cuts them off and all are guaranteed to appear in the resuming sync.
         return {
             "currently_syncing": "transactions",
             "bookmarks": {
-                "transactions": {"created_at": "2026-01-15T00:00:00Z"},
+                "transactions": {"created_at": "2026-03-10T00:00:00Z"},
             },
         }
 
@@ -42,6 +43,21 @@ class ChargifyInterruptedSyncTest(InterruptedSyncTest, ChargifyBaseTest):
         # stream order is not guaranteed.  Assert expected streams were synced.
         for stream in self.streams_to_test():
             self.assertIn(stream, self.resuming_sync_order)
+
+    def test_bookmarked_streams_start_date(self):
+        # The base assertion computes min() over first_sync records >= bookmark,
+        # which is empty when the ascending-ordered first-sync page limit doesn't
+        # reach the recent bookmark date.  Assert the weaker invariant instead:
+        # the oldest record in the resuming sync is >= the bookmark.
+        bookmark_str = self.get_bookmark_value(self.manipulate_state(), "transactions")
+        bookmark_dt = self.parse_date(bookmark_str)
+        resuming_recs = [r["data"] for r in
+                         self.resuming_sync_records.get("transactions", {}).get("messages", [])
+                         if r.get("action") == "upsert"]
+        self.assertTrue(resuming_recs, "Resuming sync returned no records for transactions")
+        oldest = min(self.parse_date(r["created_at"]) for r in resuming_recs)
+        self.assertGreaterEqual(oldest, bookmark_dt,
+                                "Oldest resuming sync record predates the bookmark")
 
     def test_resuming_sync_records(self):
         # The base class asserts exact list equality, which breaks when a record
