@@ -37,8 +37,9 @@ class ChargifyAllFieldsTest(AllFieldsTest, ChargifyBaseTest):
     the replication of all fields."""
 
     MISSING_FIELDS = KNOWN_MISSING_FIELDS
-    # 1 record per stream is enough to verify all fields; 2 pages is a safe minimum.
-    MAX_PAGES = 2
+    # 1 page per stream is enough to verify all fields; avoids slow target-stitch
+    # validation of 200 events records with complex event_specific_data.
+    MAX_PAGES = 1
 
     @staticmethod
     def name():
