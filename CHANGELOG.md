@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+  * Update libraries
+  * Unit tests and Integration tests
+
 ## 0.1.1
  * Bump dependency versions for twistlock compliance [#53](https://github.com/singer-io/tap-chargify/pull/53)
 
