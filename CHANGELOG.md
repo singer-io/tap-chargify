@@ -1,7 +1,7 @@
 # Changelog
 
-## 0.1.2
-  * Update libraries
+## 0.2.0
+  * Upgrade Python version to 3.12
   * Unit tests and Integration tests
 
 ## 0.1.1
