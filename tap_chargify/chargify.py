@@ -139,7 +139,7 @@ class Chargify(object):
     for i in self.get("invoices.json", results_key="invoices", start_date=start_date, direction="asc"):
       for j in i["invoices"]:
         yield j
-  
+
 
   def events(self, bookmark=None):
     for i in self.get("events.json"):
