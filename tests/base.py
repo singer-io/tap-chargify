@@ -133,7 +133,7 @@ class ChargifyBaseTest(BaseCase):
                 cls.API_LIMIT: 100,
             },
             "invoices": {
-                cls.PRIMARY_KEYS: {"id"},
+                cls.PRIMARY_KEYS: {"number"},
                 cls.REPLICATION_METHOD: cls.INCREMENTAL,
                 cls.REPLICATION_KEYS: {"due_date"},
                 cls.OBEYS_START_DATE: False,

@@ -76,7 +76,6 @@
     },
     "number": {
       "type": [
-        "null",
         "string"
       ]
     },

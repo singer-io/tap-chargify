@@ -184,6 +184,7 @@ class Invoices(Stream):
     # replication_key = "updated_at"
     replication_key = "due_date"
     # API endpoint filters only on `due_date`.
+    key_properties = ['number']  # 'id' is absent in actual API responses; 'number' is the unique invoice identifier
 
 
 class Events(Stream):
