@@ -21,9 +21,9 @@ jobs:
       - run:
           name: "pylint"
           command: |
-            source /usr/local/share/virtualenvs/tap-amazon-ads/bin/activate
+            source /usr/local/share/virtualenvs/tap-chargify/bin/activate
             uv pip install pylint
-            pylint tap_amazon_ads -d C,R,W
+            pylint tap_chargify -d C,R,W
       - run:
           name: 'Unit Tests'
           command: |
