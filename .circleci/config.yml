@@ -19,6 +19,12 @@ jobs:
             source /usr/local/share/virtualenvs/tap-tester/bin/activate
             stitch-validate-json tap_chargify/schemas/*.json
       - run:
+          name: "pylint"
+          command: |
+            source /usr/local/share/virtualenvs/tap-amazon-ads/bin/activate
+            uv pip install pylint
+            pylint tap_amazon_ads -d C,R,W
+      - run:
           name: 'Unit Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-chargify/bin/activate
@@ -29,7 +35,6 @@ jobs:
             source /usr/local/share/virtualenvs/tap-tester/bin/activate
             uv pip install --upgrade awscli
             uv pip install .
-            uv pip install pytest
             aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/tap_tester_sandbox dev_env.sh
             source dev_env.sh
             unset USE_STITCH_BACKEND
