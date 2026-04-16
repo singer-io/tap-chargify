@@ -25,7 +25,8 @@ class Chargify(object):
     self.uri = "https://{subdomain}.chargify.com/".format(subdomain=subdomain)
 
 
-  def retry_handler(details):
+  @staticmethod
+  def retry_handler(details: dict):
     logger.info("Received 429 -- sleeping for %s seconds",
                 details['wait'])
 
