@@ -25,7 +25,8 @@ class Chargify(object):
     self.uri = "https://{subdomain}.chargify.com/".format(subdomain=subdomain)
 
 
-  def retry_handler(details):
+  @staticmethod
+  def retry_handler(details: dict):
     logger.info("Received 429 -- sleeping for %s seconds",
                 details['wait'])
 
@@ -37,7 +38,7 @@ class Chargify(object):
                         requests.exceptions.HTTPError,
                         on_backoff=retry_handler,
                         max_tries=10)
-  def get(self, path, stream=True, **kwargs):
+  def get(self, path, stream=True, results_key=None, **kwargs):
     uri = "{uri}{path}".format(uri=self.uri, path=path)
     has_more = True
     page = 1
@@ -55,11 +56,13 @@ class Chargify(object):
       response = requests.get(final_uri, stream=stream, auth=HTTPBasicAuth(self.api_key, 'x'))
       response.raise_for_status()
 
+      data = response.json()
+      records = data[results_key] if results_key and isinstance(data, dict) else data
       page += 1
-      if len(response.json()) < per_page:
+      if len(records) < per_page:
         has_more = False
 
-      yield response.json()
+      yield data
 
   # 
   # Methods to retrieve data per stream/resource.
@@ -134,9 +137,9 @@ class Chargify(object):
 
   def invoices(self, bookmark=None):
     start_date = utils.strptime_with_tz(bookmark).strftime('%Y-%m-%d')
-    for i in self.get("invoices.json", start_date=start_date, direction="asc"):
-      for j in i:
-        yield j["invoice"]
+    for i in self.get("invoices.json", results_key="invoices", start_date=start_date, direction="asc"):
+      for j in i["invoices"]:
+        yield j
 
 
   def events(self, bookmark=None):

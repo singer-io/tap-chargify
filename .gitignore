@@ -101,6 +101,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Temporary
+tmp/
+
 # Spyder project settings
 .spyderproject
 .spyproject

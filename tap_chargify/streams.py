@@ -88,10 +88,22 @@ class Stream():
 
 
     def load_metadata(self):
-        return metadata.get_standard_metadata(schema=self.load_schema(),
-                                              key_properties=self.key_properties,
-                                              valid_replication_keys=[self.replication_key],
-                                              replication_method=self.replication_method)
+        mdata = metadata.get_standard_metadata(
+            schema=self.load_schema(),
+            key_properties=self.key_properties,
+            valid_replication_keys=[self.replication_key] if self.replication_key else None,
+            replication_method=self.replication_method
+        )
+        if self.replication_key:
+            mdata = metadata.to_list(
+                metadata.write(
+                    metadata.to_map(mdata),
+                    ('properties', self.replication_key),
+                    'inclusion',
+                    'automatic'
+                )
+            )
+        return mdata
 
 
     # The main sync function.
@@ -172,6 +184,7 @@ class Invoices(Stream):
     # replication_key = "updated_at"
     replication_key = "due_date"
     # API endpoint filters only on `due_date`.
+    key_properties = ['number']  # 'id' is absent in actual API responses; 'number' is the unique invoice identifier
 
 
 class Events(Stream):

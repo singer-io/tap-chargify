@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0
+  * **BREAKING**: Changed `invoices` primary key from `id` to `number`. The `id` field is absent in actual API responses; `number` is the unique invoice identifier returned by the Chargify API. Destinations with an existing `invoices` table keyed on `id` will need to recreate it.
+  * Upgrade Python version to 3.12
+  * Unit tests and Integration tests
+
 ## 0.1.1
  * Bump dependency versions for twistlock compliance [#53](https://github.com/singer-io/tap-chargify/pull/53)
 
