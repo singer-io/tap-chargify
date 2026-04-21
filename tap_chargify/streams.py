@@ -181,10 +181,34 @@ class Statements(Stream):
 class Invoices(Stream):
     name = "invoices"
     replication_method = "INCREMENTAL"
-    # replication_key = "updated_at"
     replication_key = "due_date"
     # API endpoint filters only on `due_date`.
     key_properties = ['number']  # 'id' is absent in actual API responses; 'number' is the unique invoice identifier
+
+    @staticmethod
+    def _to_date_str(value):
+        """Normalize a date or datetime string to a plain YYYY-MM-DD date string.
+
+        The Chargify API returns ``due_date`` as a plain date (e.g. ``2025-04-20``),
+        not an ISO 8601 datetime.  Passing such a value to
+        ``singer.utils.strptime_with_tz`` produces a *naive* datetime, which
+        cannot be compared with timezone-aware datetimes and raises a TypeError
+        on non-UTC hosts (e.g. an IST system under WSL).  Normalising both
+        operands to plain date strings avoids the issue entirely.
+        """
+        if not value:
+            return value
+        return str(value)[:10]
+
+    def is_bookmark_old(self, state, value, name=None):
+        """Compare due_date values as YYYY-MM-DD date strings.
+
+        This is safe because the Chargify invoices endpoint only accepts a
+        plain date for its ``start_date`` filter, so sub-day precision is
+        meaningless for this stream.
+        """
+        current_bookmark = self.get_bookmark(state, name)
+        return self._to_date_str(value) > self._to_date_str(current_bookmark)
 
 
 class Events(Stream):

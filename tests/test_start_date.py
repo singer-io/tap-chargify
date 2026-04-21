@@ -28,17 +28,12 @@ class ChargifyStartDateTest(StartDateTest, ChargifyBaseTest):
     @property
     def start_date_1(self):
         # Earlier start gives meaningfully more records than sync 2 (start_date_2 = Mar 17).
-        # Use .000000Z format so parse_date uses the same IST-offset code path as
-        # record timestamps, keeping comparisons consistent on this WSL environment.
-        return "2026-02-01T00:00:00.000000Z"
+        return "2026-02-01T00:00:00Z"
 
     @property
     def start_date_2(self):
         # Recent enough that sync 2 returns far fewer records than sync 1.
-        # Use .000000Z format so parse_date treats it as a naive datetime (same
-        # code-path as record timestamps), avoiding the IST→UTC offset mismatch
-        # on this WSL environment.
-        return "2026-03-17T00:00:00.000000Z"
+        return "2026-03-17T00:00:00Z"
 
     def test_replicated_records(self):
         # The base class's strict assertSetEqual on matching PKs is fragile on a live
