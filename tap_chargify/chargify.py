@@ -37,18 +37,18 @@ def is_fatal_exception(exc):
     return False  # connection-level errors → retry
 
 
+def retry_handler(details: dict):
+    """Backoff callback: log the wait duration before each retry attempt."""
+    logger.info("Received 429 or transient error -- sleeping for %s seconds",
+                details['wait'])
+
+
 """ Simple wrapper for Chargify. """
 class Chargify(object):
 
   def __init__(self, api_key, subdomain, start_date=None):
     self.api_key = api_key
     self.uri = "https://{subdomain}.chargify.com/".format(subdomain=subdomain)
-
-
-  @staticmethod
-  def retry_handler(details: dict):
-    logger.info("Received 429 or transient error -- sleeping for %s seconds",
-                details['wait'])
 
   # 
   # The `get` request.
