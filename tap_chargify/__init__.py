@@ -89,5 +89,3 @@ def main():
         sync(client, parsed_args.catalog, state)
 
 
-
-

@@ -64,8 +64,7 @@
               "type": "integer"
             },
             "created_at": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
             "revenue_at_risk_in_cents": {
               "type": "integer"
@@ -74,8 +73,7 @@
               "type": "integer"
             },
             "last_attempted_at": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             }
           }
         },
