@@ -58,13 +58,20 @@ class Chargify(object):
       backoff.expo,
       (
           requests.exceptions.HTTPError,
+      ),
+      on_backoff=retry_handler,
+      max_tries=5,
+      giveup=is_fatal_exception,
+  )
+  @backoff.on_exception(
+      backoff.expo,
+      (
           requests.exceptions.ConnectionError,
           requests.exceptions.Timeout,
           requests.exceptions.ChunkedEncodingError,
       ),
       on_backoff=retry_handler,
-      max_tries=10,
-      giveup=is_fatal_exception,
+      max_tries=5,
   )
   def _fetch_page(self, url, stream=True):
     """Perform a single HTTP GET and return the parsed JSON body.
@@ -85,7 +92,10 @@ class Chargify(object):
     page = 1
     per_page = 100
     while has_more:
-      params = {"page": page, "per_page": per_page}
+      params = {
+        "page": page,
+        "per_page": per_page
+      }
       for key, value in kwargs.items():
         params[key] = value
       final_uri = uri + "?{params}".format(params=urlencode(params))

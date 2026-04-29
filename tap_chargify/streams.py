@@ -71,11 +71,11 @@ class Stream():
     def update_bookmark(self, state, value, name=None):
         name = self.name if not name else name
         # when `value` is None, it means to set the bookmark to None
-        if value is None or self.is_bookmark_old(state, value, name):
+        if value is None or self.is_after_bookmark(state, value, name):
             singer.write_bookmark(state, name, self.replication_key, value)
 
 
-    def is_bookmark_old(self, state, value, name=None):
+    def is_after_bookmark(self, state, value, name=None):
         current_bookmark = self.get_bookmark(state, name)
         return utils.strptime_with_tz(value) > utils.strptime_with_tz(current_bookmark)
 
@@ -118,7 +118,7 @@ class Stream():
             # so store highest value bookmark in session.
             for item in res:
                 # if item is bigger than bookmark, then
-                if self.is_bookmark_old(state, item[self.replication_key]):
+                if self.is_after_bookmark(state, item[self.replication_key]):
                     self.update_bookmark(state, item[self.replication_key])
                     yield (self.stream, item)
         else:
@@ -187,25 +187,25 @@ class Invoices(Stream):
 
     @staticmethod
     def _to_date_str(value):
-        """Normalize a date or datetime string to a plain YYYY-MM-DD date string.
+        """Normalize a date, datetime string, or epoch timestamp to YYYY-MM-DD.
 
-        The Chargify API returns ``due_date`` as a plain date (e.g. ``2025-04-20``),
-        not an ISO 8601 datetime.  Passing such a value to
-        ``singer.utils.strptime_with_tz`` produces a *naive* datetime, which
-        cannot be compared with timezone-aware datetimes and raises a TypeError
-        on non-UTC hosts (e.g. an IST system under WSL).  Normalising both
-        operands to plain date strings avoids the issue entirely.
+        Handles:
+        - Plain date strings (e.g. ``2025-04-20``)
+        - ISO 8601 datetime strings with or without timezone
+        - Unix epoch timestamps (int or float, seconds since epoch)
         """
         if not value:
             return value
-        return str(value)[:10]
+        if isinstance(value, (int, float)):
+            return datetime.datetime.fromtimestamp(value, tz=datetime.timezone.utc).strftime('%Y-%m-%d')
+        return str(parse(str(value)).date())
 
-    def is_bookmark_old(self, state, value, name=None):
-        """Compare due_date values as YYYY-MM-DD date strings.
+    def is_after_bookmark(self, state, value, name=None):
+        """Return True if *value* is after the current bookmark.
 
-        This is safe because the Chargify invoices endpoint only accepts a
-        plain date for its ``start_date`` filter, so sub-day precision is
-        meaningless for this stream.
+        Compares due_date values as YYYY-MM-DD date strings, which is safe
+        because the Chargify invoices endpoint only accepts a plain date for
+        its ``start_date`` filter, so sub-day precision is meaningless.
         """
         current_bookmark = self.get_bookmark(state, name)
         return self._to_date_str(value) > self._to_date_str(current_bookmark)
