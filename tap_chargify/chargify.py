@@ -17,14 +17,12 @@ from time import mktime
 logger = logging.getLogger()
 
 
-def is_fatal_exception(exc):
-    """Return True to stop retrying (give up immediately), False to keep retrying.
+def giveup(exc):
+    """Backoff giveup predicate: return True to stop retrying, False to keep retrying.
 
-    Retry policy:
-      - 429 Too Many Requests  → retry (rate-limited)
-      - 5xx Server Errors      → retry
-      - 4xx (except 429)       → give up (client errors are not transient)
-      - Connection/Timeout     → retry
+    - 4xx (except 429) → give up; client errors are not transient
+    - 429, 5xx         → retry
+    - connection-level → retry
     """
     if isinstance(exc, requests.exceptions.HTTPError):
         response = exc.response
@@ -61,7 +59,7 @@ class Chargify(object):
       ),
       on_backoff=retry_handler,
       max_tries=5,
-      giveup=is_fatal_exception,
+      giveup=giveup,
   )
   @backoff.on_exception(
       backoff.expo,

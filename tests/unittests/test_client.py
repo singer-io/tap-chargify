@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from tap_chargify.chargify import Chargify, is_fatal_exception
+from tap_chargify.chargify import Chargify, giveup
 
 
 class TestClient(unittest.TestCase):
@@ -52,8 +52,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(len(pages[1]["price_points"]), 5)
 
 
-class TestIsFatalException(unittest.TestCase):
-    """Tests for the is_fatal_exception giveup predicate."""
+class TestGiveup(unittest.TestCase):
+    """Tests for the giveup predicate."""
 
     def _http_error(self, status_code):
         """Build a requests.exceptions.HTTPError with a given status code."""
@@ -65,58 +65,58 @@ class TestIsFatalException(unittest.TestCase):
     # --- 4xx non-429 → should give up (True) ---
 
     def test_400_is_fatal(self):
-        self.assertTrue(is_fatal_exception(self._http_error(400)))
+        self.assertTrue(giveup(self._http_error(400)))
 
     def test_401_is_fatal(self):
-        self.assertTrue(is_fatal_exception(self._http_error(401)))
+        self.assertTrue(giveup(self._http_error(401)))
 
     def test_403_is_fatal(self):
-        self.assertTrue(is_fatal_exception(self._http_error(403)))
+        self.assertTrue(giveup(self._http_error(403)))
 
     def test_404_is_fatal(self):
-        self.assertTrue(is_fatal_exception(self._http_error(404)))
+        self.assertTrue(giveup(self._http_error(404)))
 
     def test_422_is_fatal(self):
-        self.assertTrue(is_fatal_exception(self._http_error(422)))
+        self.assertTrue(giveup(self._http_error(422)))
 
     # --- 429 → should retry (False) ---
 
     def test_429_is_not_fatal(self):
-        self.assertFalse(is_fatal_exception(self._http_error(429)))
+        self.assertFalse(giveup(self._http_error(429)))
 
     # --- 5xx → should retry (False) ---
 
     def test_500_is_not_fatal(self):
-        self.assertFalse(is_fatal_exception(self._http_error(500)))
+        self.assertFalse(giveup(self._http_error(500)))
 
     def test_502_is_not_fatal(self):
-        self.assertFalse(is_fatal_exception(self._http_error(502)))
+        self.assertFalse(giveup(self._http_error(502)))
 
     def test_503_is_not_fatal(self):
-        self.assertFalse(is_fatal_exception(self._http_error(503)))
+        self.assertFalse(giveup(self._http_error(503)))
 
     # --- HTTPError with no response object → should retry (False) ---
 
     def test_http_error_no_response_is_not_fatal(self):
         exc = requests.exceptions.HTTPError(response=None)
-        self.assertFalse(is_fatal_exception(exc))
+        self.assertFalse(giveup(exc))
 
     # --- Connection-level errors → should retry (False) ---
 
     def test_connection_error_is_not_fatal(self):
-        self.assertFalse(is_fatal_exception(requests.exceptions.ConnectionError()))
+        self.assertFalse(giveup(requests.exceptions.ConnectionError()))
 
     def test_timeout_is_not_fatal(self):
-        self.assertFalse(is_fatal_exception(requests.exceptions.Timeout()))
+        self.assertFalse(giveup(requests.exceptions.Timeout()))
 
     def test_chunked_encoding_error_is_not_fatal(self):
-        self.assertFalse(is_fatal_exception(requests.exceptions.ChunkedEncodingError()))
+        self.assertFalse(giveup(requests.exceptions.ChunkedEncodingError()))
 
     def test_connection_reset_error_is_not_fatal(self):
         # ConnectionResetError is a subclass of OSError; when wrapped by
         # requests it surfaces as a ConnectionError.
         exc = requests.exceptions.ConnectionError(ConnectionResetError())
-        self.assertFalse(is_fatal_exception(exc))
+        self.assertFalse(giveup(exc))
 
 
 class TestBackoffRetry(unittest.TestCase):
