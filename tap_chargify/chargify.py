@@ -17,6 +17,30 @@ from time import mktime
 logger = logging.getLogger()
 
 
+def giveup(exc):
+    """Backoff giveup predicate: return True to stop retrying, False to keep retrying.
+
+    - 4xx (except 429) → give up; client errors are not transient
+    - 429, 5xx         → retry
+    - connection-level → retry
+    """
+    if isinstance(exc, requests.exceptions.HTTPError):
+        response = exc.response
+        status_code = response.status_code if response is not None else None
+        if status_code is None:
+            return False  # unknown — retry
+        if 400 <= status_code < 500:
+            return status_code != 429  # give up on 4xx except 429
+        return False  # 5xx → retry
+    return False  # connection-level errors → retry
+
+
+def retry_handler(details: dict):
+    """Backoff callback: log the wait duration before each retry attempt."""
+    logger.info("Received 429 or transient error -- sleeping for %s seconds",
+                details['wait'])
+
+
 """ Simple wrapper for Chargify. """
 class Chargify(object):
 
@@ -24,21 +48,43 @@ class Chargify(object):
     self.api_key = api_key
     self.uri = "https://{subdomain}.chargify.com/".format(subdomain=subdomain)
 
-
-  @staticmethod
-  def retry_handler(details: dict):
-    logger.info("Received 429 -- sleeping for %s seconds",
-                details['wait'])
-
   # 
   # The `get` request.
   # 
-  
-  @backoff.on_exception(backoff.expo,
-                        requests.exceptions.HTTPError,
-                        on_backoff=retry_handler,
-                        max_tries=10)
+
+  @backoff.on_exception(
+      backoff.expo,
+      (
+          requests.exceptions.HTTPError,
+      ),
+      on_backoff=retry_handler,
+      max_tries=5,
+      giveup=giveup,
+  )
+  @backoff.on_exception(
+      backoff.expo,
+      (
+          requests.exceptions.ConnectionError,
+          requests.exceptions.Timeout,
+          requests.exceptions.ChunkedEncodingError,
+      ),
+      on_backoff=retry_handler,
+      max_tries=5,
+  )
+  def _fetch_page(self, url, stream=True):
+    """Perform a single HTTP GET and return the parsed JSON body.
+
+    Decorated with backoff so transient errors (429, 5xx, connection-level)
+    are retried automatically.  Non-retriable 4xx errors are re-raised
+    immediately via the ``giveup`` predicate.
+    """
+    logger.info("GET request to %s", url)
+    response = requests.get(url, stream=stream, auth=HTTPBasicAuth(self.api_key, 'x'))
+    response.raise_for_status()
+    return response.json()
+
   def get(self, path, stream=True, results_key=None, **kwargs):
+    """Paginate through all pages for *path*, yielding each page's JSON body."""
     uri = "{uri}{path}".format(uri=self.uri, path=path)
     has_more = True
     page = 1
@@ -52,11 +98,7 @@ class Chargify(object):
         params[key] = value
       final_uri = uri + "?{params}".format(params=urlencode(params))
 
-      logger.info("GET request to {final_uri}".format(final_uri=final_uri))
-      response = requests.get(final_uri, stream=stream, auth=HTTPBasicAuth(self.api_key, 'x'))
-      response.raise_for_status()
-
-      data = response.json()
+      data = self._fetch_page(final_uri, stream)
       records = data[results_key] if results_key and isinstance(data, dict) else data
       page += 1
       if len(records) < per_page:
@@ -93,7 +135,7 @@ class Chargify(object):
       for j in i:
         for k in self.get("product_families/{product_family_id}/products.json".format(product_family_id=j["product_family"]["id"])):
           for l in k:
-            for o in self.get("products/{product_id}/price_points.json".format(product_id=l["product"]["id"])):
+            for o in self.get("products/{product_id}/price_points.json".format(product_id=l["product"]["id"]), results_key="price_points"):
               for m in o["price_points"]:
                 yield m
 

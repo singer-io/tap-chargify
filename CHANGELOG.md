@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+  * **BREAKING**: Added `"format": "date-time"` to date fields across all streams [#56](https://github.com/singer-io/tap-chargify/pull/56)
+  * Add retry/backoff with giveup predicate for non-retriable 4xx errors [#56](https://github.com/singer-io/tap-chargify/pull/56)
+  * Fix pagination for `price_points` stream [#56](https://github.com/singer-io/tap-chargify/pull/56)
+  * Fix invoice bookmark comparison for date-only `due_date` values [#56](https://github.com/singer-io/tap-chargify/pull/56)
+
 ## 1.0.0
   * **BREAKING**: Changed `invoices` primary key from `id` to `number`. The `id` field is absent in actual API responses; `number` is the unique invoice identifier returned by the Chargify API. Destinations with an existing `invoices` table keyed on `id` will need to recreate it.
   * Upgrade Python version to 3.12

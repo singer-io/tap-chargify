@@ -3,6 +3,7 @@
     "null",
     "object"
   ],
+  "additionalProperties": false,
   "properties": {
     "id": {
       "type": [
@@ -66,7 +67,8 @@
               "type": "integer"
             },
             "created_at": {
-              "type": "string"
+              "type": "string",
+              "format": "date-time"
             },
             "revenue_at_risk_in_cents": {
               "type": "integer"
@@ -75,7 +77,8 @@
               "type": "integer"
             },
             "last_attempted_at": {
-              "type": "string"
+              "type": "string",
+              "format": "date-time"
             }
           }
         },
