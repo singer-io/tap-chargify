@@ -10,11 +10,19 @@ import sys
 from tap_chargify.streams import STREAMS
 
 
+logger = singer.get_logger()
+
+
 def discover_streams(client):
   streams = []
 
   for s in STREAMS.values():
     s = s(client)
+
+    if s.check_access_url and not s.client.check_access(s.check_access_url):
+      logger.warning("%s: Unauthorized (401/403) - skipping stream from catalog", s.name)
+      continue
+
     schema = singer.resolve_schema_references(s.load_schema())
 
     # If stream is `users`, then get dynamic fields via API.

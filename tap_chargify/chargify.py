@@ -110,6 +110,22 @@ class Chargify(object):
   # Methods to retrieve data per stream/resource.
   # 
 
+  def check_access(self, path):
+    """Return True if the endpoint is accessible, False on 401/403 (unauthorized/forbidden).
+
+    Makes a raw single-page request without backoff so authorization failures
+    are surfaced immediately rather than retried.
+    """
+    uri = "{uri}{path}?page=1&per_page=1".format(uri=self.uri, path=path)
+    try:
+      response = requests.get(uri, auth=HTTPBasicAuth(self.api_key, 'x'))
+      response.raise_for_status()
+      return True
+    except requests.exceptions.HTTPError as e:
+      if e.response is not None and e.response.status_code in (401, 403):
+        return False
+      raise
+
   def customers(self, bookmark=None):
     for i in self.get("customers.json"):
       for j in i:

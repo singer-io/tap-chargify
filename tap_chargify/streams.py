@@ -43,6 +43,10 @@ class Stream():
     key_properties = KEY_PROPERTIES
     session_bookmark = None
 
+    @property
+    def check_access_url(self):
+        return "{}.json".format(self.name)
+
 
     def __init__(self, client=None):
         self.client = client
@@ -127,6 +131,11 @@ class Stream():
 
 
 
+class ProductFamilyNestedStream(Stream):
+    """Base for streams nested under product_families; probes that endpoint for access."""
+    check_access_url = "product_families.json"
+
+
 class Customers(Stream):
     name = "customers"
     replication_method = "FULL_TABLE"
@@ -138,22 +147,22 @@ class ProductFamilies(Stream):
     replication_method = "FULL_TABLE"
 
 
-class Products(Stream):
+class Products(ProductFamilyNestedStream):
     name = "products"
     replication_method = "FULL_TABLE"
 
 
-class PricePoints(Stream):
+class PricePoints(ProductFamilyNestedStream):
     name = "price_points"
     replication_method = "FULL_TABLE"
 
 
-class Coupons(Stream):
+class Coupons(ProductFamilyNestedStream):
     name = "coupons"
     replication_method = "FULL_TABLE"
 
 
-class Components(Stream):
+class Components(ProductFamilyNestedStream):
     name = "components"
     replication_method = "FULL_TABLE"
 
