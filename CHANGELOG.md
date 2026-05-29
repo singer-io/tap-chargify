@@ -1,10 +1,8 @@
 # Changelog
 
 ## 2.1.0
-  * Filter unauthorized streams during discovery — streams returning 401/403 are excluded from the catalog [#57](https://github.com/singer-io/tap-chargify/pull/57)
-  * Upgrade `singer-python` from `5.13.2` to `6.8.0` [#57](https://github.com/singer-io/tap-chargify/pull/57)
-  * Upgrade `requests` from `2.32.4` to `2.34.2` [#57](https://github.com/singer-io/tap-chargify/pull/57)
-  * Add `backoff==2.2.1` as explicit dependency [#57](https://github.com/singer-io/tap-chargify/pull/57)
+  * Filter unauthorized streams (401/403) during discovery [#57](https://github.com/singer-io/tap-chargify/pull/57)
+  * Upgrade `singer-python` to `6.8.0`, `requests` to `2.34.2`; add `backoff==2.2.1` as explicit dependency [#57](https://github.com/singer-io/tap-chargify/pull/57)
 
 ## 2.0.0
   * **BREAKING**: Added `"format": "date-time"` to date fields across all streams [#56](https://github.com/singer-io/tap-chargify/pull/56)
