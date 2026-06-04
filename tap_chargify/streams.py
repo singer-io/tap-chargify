@@ -45,6 +45,12 @@ class Stream():
 
     @property
     def check_access_url(self):
+        # Each stream is probed individually using its own top-level endpoint
+        # (e.g. customers → customers.json, invoices → invoices.json).
+        # The 4 nested streams (products, price_points, coupons, components)
+        # override this with product_families.json via ProductFamilyNestedStream
+        # because the Chargify API exposes no standalone top-level endpoint for
+        # them — their sync always starts by paging product_families first.
         return "{}.json".format(self.name)
 
 
@@ -132,7 +138,14 @@ class Stream():
 
 
 class ProductFamilyNestedStream(Stream):
-    """Base for streams nested under product_families; probes that endpoint for access."""
+    """Base for streams nested under product_families.
+
+    The Chargify API exposes no standalone top-level endpoint for products,
+    price_points, coupons, or components — every sync call must first page
+    through product_families to obtain an ID before querying the nested
+    resource.  Consequently, product_families.json is the only meaningful
+    probe URL available for access-checking these streams at discovery.
+    """
     check_access_url = "product_families.json"
 
 

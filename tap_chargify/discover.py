@@ -19,6 +19,11 @@ def discover_streams(client):
   for s in STREAMS.values():
     s = s(client)
 
+    # Access is checked per stream before adding it to the catalog.
+    # 7 streams probe their own top-level endpoint (e.g. customers → customers.json).
+    # 4 nested streams (products, price_points, coupons, components) probe
+    # product_families.json — the only top-level endpoint in their request chain.
+    # Any stream returning 401/403 is silently excluded from the catalog.
     if s.check_access_url and not s.client.check_access(s.check_access_url):
       logger.warning("%s: Unauthorized (401/403) - skipping stream from catalog", s.name)
       continue
