@@ -37,6 +37,7 @@ class TestDiscoveryHelpers(unittest.TestCase):
 
     def test_discover_streams_returns_all_streams(self):
         mock_client = MagicMock()
+        mock_client.check_access.return_value = True
         mock_client.get_user_fields.return_value = {"fields": {}}
         streams = discover_streams(mock_client)
 
@@ -56,6 +57,13 @@ class TestCheckAccessUrl(unittest.TestCase):
         for cls in (Products, PricePoints, Coupons, Components):
             with self.subTest(stream=cls.name):
                 self.assertEqual(cls(client=None).check_access_url, "product_families.json")
+
+    def test_nested_streams_inherit_product_family_nested_stream(self):
+        # PR change: Products/PricePoints/Coupons/Components now subclass
+        # ProductFamilyNestedStream instead of Stream directly.
+        for cls in (Products, PricePoints, Coupons, Components):
+            with self.subTest(stream=cls.name):
+                self.assertTrue(issubclass(cls, ProductFamilyNestedStream))
 
     def test_all_streams_have_non_none_url(self):
         for name, cls in STREAMS.items():
