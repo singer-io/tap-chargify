@@ -20,7 +20,8 @@ def discover_streams(client):
     s = s(client)
 
     if not s.check_access():
-      LOGGER.warning("Excluding stream '%s' from catalog (HTTP 403 Forbidden)", s.name)
+      path = s.access_path if s.access_path is not None else "{}.json".format(s.name)
+      LOGGER.warning("Excluding stream '%s' from catalog (HTTP 403 Forbidden on %s)", s.name, path)
       continue
 
     schema = singer.resolve_schema_references(s.load_schema())
@@ -36,7 +37,7 @@ def discover_streams(client):
     streams.append({'stream': s.name, 'tap_stream_id': s.name, 'schema': schema, 'metadata': s.load_metadata()})
 
   if not streams:
-    raise Exception(
+    raise PermissionError(
       "All streams returned HTTP 403 Forbidden. "
       "Verify your API credentials have the necessary permissions."
     )

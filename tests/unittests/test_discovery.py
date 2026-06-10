@@ -1,7 +1,5 @@
 import unittest
-from unittest.mock import MagicMock, patch
-
-import requests
+from unittest.mock import MagicMock
 
 from tap_chargify.discover import discover_streams, get_schema_datatype, merge, translate_to_schema
 from tap_chargify.streams import STREAMS

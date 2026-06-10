@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.1.0
-  * Streams the credentials cannot access (HTTP 403) are now excluded from the catalog during discovery [#58](https://github.com/singer-io/tap-chargify/pull/58)
+  * Streams that the credentials cannot access (HTTP 403) are now excluded from the catalog during discovery [#58](https://github.com/singer-io/tap-chargify/pull/58)
   * Bump `singer-python` from `5.13.2` to `6.8.0` and `requests` from `2.32.4` to `2.34.2`
 
 ## 2.0.0
