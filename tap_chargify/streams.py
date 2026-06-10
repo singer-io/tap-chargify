@@ -18,6 +18,7 @@ from tap_chargify.context import Context
 
 logger = singer.get_logger()
 KEY_PROPERTIES = ['id']
+_PRODUCT_FAMILIES_PATH = "product_families.json"
 
 
 def get_abs_path(path):
@@ -42,10 +43,19 @@ class Stream():
     stream = None
     key_properties = KEY_PROPERTIES
     session_bookmark = None
+    access_path = None  # primary API path used to verify credentials have access
 
 
     def __init__(self, client=None):
         self.client = client
+
+
+    def check_access(self):
+        """Return True if credentials can access this stream's endpoint."""
+        if self.client is None:
+            return True
+        path = self.access_path if self.access_path is not None else "{}.json".format(self.name)
+        return self.client.check_access(path)
 
 
     def is_session_bookmark_old(self, value):
@@ -141,21 +151,25 @@ class ProductFamilies(Stream):
 class Products(Stream):
     name = "products"
     replication_method = "FULL_TABLE"
+    access_path = _PRODUCT_FAMILIES_PATH
 
 
 class PricePoints(Stream):
     name = "price_points"
     replication_method = "FULL_TABLE"
+    access_path = _PRODUCT_FAMILIES_PATH
 
 
 class Coupons(Stream):
     name = "coupons"
     replication_method = "FULL_TABLE"
+    access_path = _PRODUCT_FAMILIES_PATH
 
 
 class Components(Stream):
     name = "components"
     replication_method = "FULL_TABLE"
+    access_path = _PRODUCT_FAMILIES_PATH
 
 
 class Subscriptions(Stream):

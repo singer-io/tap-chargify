@@ -189,6 +189,17 @@ class Chargify(object):
       for j in i:
         yield j["event"]
 
+  def check_access(self, path):
+    """Return True if credentials can access *path*, False on HTTP 403."""
+    try:
+      uri = "{}{}?page=1&per_page=1".format(self.uri, path)
+      self._fetch_page(uri)
+      return True
+    except requests.exceptions.HTTPError as e:
+      if e.response is not None and e.response.status_code == 403:
+        return False
+      raise
+
 
 
 

@@ -10,11 +10,19 @@ import sys
 from tap_chargify.streams import STREAMS
 
 
+LOGGER = singer.get_logger()
+
+
 def discover_streams(client):
   streams = []
 
   for s in STREAMS.values():
     s = s(client)
+
+    if not s.check_access():
+      LOGGER.warning("Excluding stream '%s' from catalog (HTTP 403 Forbidden)", s.name)
+      continue
+
     schema = singer.resolve_schema_references(s.load_schema())
 
     # If stream is `users`, then get dynamic fields via API.
@@ -26,6 +34,13 @@ def discover_streams(client):
       schema = merge(schema, field_schema)
 
     streams.append({'stream': s.name, 'tap_stream_id': s.name, 'schema': schema, 'metadata': s.load_metadata()})
+
+  if not streams:
+    raise Exception(
+      "All streams returned HTTP 403 Forbidden. "
+      "Verify your API credentials have the necessary permissions."
+    )
+
   return streams
 
 #
