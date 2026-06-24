@@ -10,7 +10,7 @@ setup(
     classifiers=["Programming Language :: Python :: 3 :: Only"],
     py_modules=["tap_chargify"],
     install_requires=[
-        "singer-python==5.13.2",
+        "singer-python==6.8.0",
         "requests==2.34.2"
     ],
     extras_require={
