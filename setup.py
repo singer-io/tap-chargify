@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="tap-chargify",
-    version="2.0.0",
+    version="2.0.1",
     description="Singer.io tap for extracting Chargify data",
     author="Stitch",
     url="http://github.com/singer-io/tap-chargify",
@@ -11,7 +11,7 @@ setup(
     py_modules=["tap_chargify"],
     install_requires=[
         "singer-python==5.13.2",
-        "requests==2.32.4"
+        "requests==2.34.2"
     ],
     extras_require={
         'dev': [
