@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.0.1
-  * Bump requests version to 2.34.2 to address security vulnerability [#57](https://github.com/singer-io/tap-chargify/pull/57)
+  * Bump requests version to 2.34.2 to address security vulnerability [#59](https://github.com/singer-io/tap-chargify/pull/59)
 
 ## 2.0.0
   * **BREAKING**: Added `"format": "date-time"` to date fields across all streams [#56](https://github.com/singer-io/tap-chargify/pull/56)
