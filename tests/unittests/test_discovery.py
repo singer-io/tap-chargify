@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock
 
 from tap_chargify.chargify import ChargifyForbiddenError
 from tap_chargify.discover import (
@@ -71,26 +71,9 @@ class TestApplyAccessChecks(unittest.TestCase):
         mock_client = MagicMock()
         streams = self._make_streams(["customers", "subscriptions", "events"])
 
-        with patch.object(STREAMS["customers"], "__init__", return_value=None), \
-             patch("tap_chargify.streams.Stream.check_access") as mock_check:
-            # customers → inaccessible; others → accessible
-            def side_effect(self_inner):
-                return self_inner.name != "customers"
-            mock_check.side_effect = lambda: False  # simplified: patch per instance
-
-            # Use a more targeted approach: patch STREAMS entries directly
-            pass
-
-        # Direct approach: make check_access return False for one stream
         original_check = STREAMS["customers"].check_access
-
-        def patched_check(self_inner):
-            if self_inner.name == "customers":
-                return False
-            return True
-
         try:
-            STREAMS["customers"].check_access = patched_check
+            STREAMS["customers"].check_access = lambda self_inner: False
             _apply_access_checks(mock_client, streams)
             remaining = {s["tap_stream_id"] for s in streams}
             self.assertNotIn("customers", remaining)

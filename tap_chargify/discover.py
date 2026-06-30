@@ -6,7 +6,6 @@
 import os
 import json
 import singer
-import sys
 from tap_chargify.streams import STREAMS
 from tap_chargify.chargify import ChargifyForbiddenError
 
