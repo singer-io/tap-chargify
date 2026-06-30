@@ -175,3 +175,45 @@ class TestCheckAccessMethod(unittest.TestCase):
             called_url = mock_client._fetch_page.call_args[0][0]
             self.assertIn(name, called_url, f"URL for stream '{name}' should contain the stream name")
 
+
+class TestDiscoverStreamsExclusion(unittest.TestCase):
+    """Integration-style tests (mock-based) verifying that discover_streams()
+    correctly excludes unauthorized streams from the returned catalog."""
+
+    def test_forbidden_stream_excluded_from_catalog(self):
+        """A stream returning check_access()=False must not appear in the catalog."""
+        mock_client = MagicMock()
+        original_check = STREAMS["customers"].check_access
+        try:
+            STREAMS["customers"].check_access = lambda self_inner: False
+            streams = discover_streams(mock_client)
+            stream_ids = {s["tap_stream_id"] for s in streams}
+            self.assertNotIn("customers", stream_ids)
+        finally:
+            STREAMS["customers"].check_access = original_check
+
+    def test_authorized_streams_unaffected_when_one_excluded(self):
+        """All accessible streams still appear in the catalog when one is excluded."""
+        mock_client = MagicMock()
+        original_check = STREAMS["customers"].check_access
+        try:
+            STREAMS["customers"].check_access = lambda self_inner: False
+            streams = discover_streams(mock_client)
+            stream_ids = {s["tap_stream_id"] for s in streams}
+            self.assertEqual(stream_ids, set(STREAMS.keys()) - {"customers"})
+        finally:
+            STREAMS["customers"].check_access = original_check
+
+    def test_all_forbidden_raises_error(self):
+        """Discovery must raise ChargifyForbiddenError when no streams are accessible."""
+        mock_client = MagicMock()
+        original_checks = {name: cls.check_access for name, cls in STREAMS.items()}
+        try:
+            for cls in STREAMS.values():
+                cls.check_access = lambda self_inner: False
+            with self.assertRaises(ChargifyForbiddenError):
+                discover_streams(mock_client)
+        finally:
+            for name, cls in STREAMS.items():
+                cls.check_access = original_checks[name]
+
