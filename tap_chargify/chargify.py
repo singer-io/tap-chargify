@@ -17,6 +17,11 @@ from time import mktime
 logger = logging.getLogger()
 
 
+class ChargifyForbiddenError(Exception):
+    """Raised when the Chargify API returns HTTP 403 Forbidden."""
+    pass
+
+
 def giveup(exc):
     """Backoff giveup predicate: return True to stop retrying, False to keep retrying.
 
@@ -80,6 +85,10 @@ class Chargify(object):
     """
     logger.info("GET request to %s", url)
     response = requests.get(url, stream=stream, auth=HTTPBasicAuth(self.api_key, 'x'))
+    if response.status_code == 403:
+        raise ChargifyForbiddenError(
+            "HTTP-error-code: 403, Error: {}".format(response.text)
+        )
     response.raise_for_status()
     return response.json()
 

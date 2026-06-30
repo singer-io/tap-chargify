@@ -14,6 +14,7 @@ from singer import utils
 from singer.metrics import Point
 from dateutil.parser import parse
 from tap_chargify.context import Context
+from tap_chargify.chargify import ChargifyForbiddenError
 
 
 logger = singer.get_logger()
@@ -42,13 +43,40 @@ class Stream():
     stream = None
     key_properties = KEY_PROPERTIES
     session_bookmark = None
+    parent = None
+    check_access_path = None  # defaults to self.name when None
 
 
     def __init__(self, client=None):
         self.client = client
 
 
-    def is_session_bookmark_old(self, value):
+    def check_access(self):
+        """
+        Verify that the API credentials have read access to this stream.
+        Returns True if accessible, False if a 403 Forbidden error is raised.
+        Child streams always return True (access is governed by the parent check).
+        """
+        if self.parent:
+            return True
+
+        path = self.check_access_path or self.name
+        url = "{uri}{path}.json?page=1&per_page=1".format(
+            uri=self.client.uri, path=path
+        )
+
+        try:
+            self.client._fetch_page(url, stream=False)
+            return True
+        except ChargifyForbiddenError as exc:
+            logger.warning(
+                "Permission Error: Stream '%s' - %s",
+                self.name,
+                exc,
+            )
+            return False
+
+
         if self.session_bookmark is None:
             return True
         return utils.strptime_with_tz(value) > utils.strptime_with_tz(self.session_bookmark)
@@ -141,21 +169,25 @@ class ProductFamilies(Stream):
 class Products(Stream):
     name = "products"
     replication_method = "FULL_TABLE"
+    check_access_path = "product_families"
 
 
 class PricePoints(Stream):
     name = "price_points"
     replication_method = "FULL_TABLE"
+    check_access_path = "product_families"
 
 
 class Coupons(Stream):
     name = "coupons"
     replication_method = "FULL_TABLE"
+    check_access_path = "product_families"
 
 
 class Components(Stream):
     name = "components"
     replication_method = "FULL_TABLE"
+    check_access_path = "product_families"
 
 
 class Subscriptions(Stream):

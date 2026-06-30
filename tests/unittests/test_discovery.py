@@ -1,7 +1,15 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch, call
 
-from tap_chargify.discover import discover_streams, get_schema_datatype, merge, translate_to_schema
+from tap_chargify.chargify import ChargifyForbiddenError
+from tap_chargify.discover import (
+    discover_streams,
+    get_schema_datatype,
+    merge,
+    translate_to_schema,
+    _apply_access_checks,
+    _prune_inaccessible_children,
+)
 from tap_chargify.streams import STREAMS
 
 
@@ -38,3 +46,132 @@ class TestDiscoveryHelpers(unittest.TestCase):
         streams = discover_streams(mock_client)
 
         self.assertEqual(set(stream["tap_stream_id"] for stream in streams), set(STREAMS.keys()))
+
+
+class TestApplyAccessChecks(unittest.TestCase):
+    """Tests for _apply_access_checks and _prune_inaccessible_children."""
+
+    def _make_streams(self, names=None):
+        """Return a minimal list of stream dicts for the given names."""
+        names = names or list(STREAMS.keys())
+        return [{"stream": n, "tap_stream_id": n, "schema": {}, "metadata": []} for n in names]
+
+    def test_all_streams_accessible(self):
+        """When all streams are accessible, list is unchanged."""
+        mock_client = MagicMock()
+        streams = self._make_streams()
+        original_names = {s["tap_stream_id"] for s in streams}
+
+        _apply_access_checks(mock_client, streams)
+
+        self.assertEqual({s["tap_stream_id"] for s in streams}, original_names)
+
+    def test_inaccessible_stream_excluded(self):
+        """A stream returning check_access()=False is removed from the catalog."""
+        mock_client = MagicMock()
+        streams = self._make_streams(["customers", "subscriptions", "events"])
+
+        with patch.object(STREAMS["customers"], "__init__", return_value=None), \
+             patch("tap_chargify.streams.Stream.check_access") as mock_check:
+            # customers → inaccessible; others → accessible
+            def side_effect(self_inner):
+                return self_inner.name != "customers"
+            mock_check.side_effect = lambda: False  # simplified: patch per instance
+
+            # Use a more targeted approach: patch STREAMS entries directly
+            pass
+
+        # Direct approach: make check_access return False for one stream
+        original_check = STREAMS["customers"].check_access
+
+        def patched_check(self_inner):
+            if self_inner.name == "customers":
+                return False
+            return True
+
+        try:
+            STREAMS["customers"].check_access = patched_check
+            _apply_access_checks(mock_client, streams)
+            remaining = {s["tap_stream_id"] for s in streams}
+            self.assertNotIn("customers", remaining)
+            self.assertIn("subscriptions", remaining)
+            self.assertIn("events", remaining)
+        finally:
+            STREAMS["customers"].check_access = original_check
+
+    def test_all_inaccessible_raises(self):
+        """When ALL streams are inaccessible, ChargifyForbiddenError is raised."""
+        mock_client = MagicMock()
+        streams = self._make_streams(["customers", "events"])
+
+        original_checks = {name: cls.check_access for name, cls in STREAMS.items()}
+        try:
+            for cls in STREAMS.values():
+                cls.check_access = lambda self_inner: False
+
+            with self.assertRaises(ChargifyForbiddenError) as ctx:
+                _apply_access_checks(mock_client, streams)
+            self.assertIn("403", str(ctx.exception))
+        finally:
+            for name, cls in STREAMS.items():
+                cls.check_access = original_checks[name]
+
+    def test_prune_inaccessible_children_no_op_when_no_children(self):
+        """All tap-chargify streams are top-level (parent=None); pruning is a no-op."""
+        streams = self._make_streams()
+        original = list(streams)
+        _prune_inaccessible_children(streams)
+        self.assertEqual([s["tap_stream_id"] for s in streams],
+                         [s["tap_stream_id"] for s in original])
+
+    def test_partial_access_logs_warning(self):
+        """A warning is logged when some but not all streams are excluded."""
+        mock_client = MagicMock()
+        streams = self._make_streams(["customers", "events"])
+
+        original_check_customers = STREAMS["customers"].check_access
+        try:
+            STREAMS["customers"].check_access = lambda self_inner: False
+
+            with self.assertLogs(level="WARNING") as log_ctx:
+                _apply_access_checks(mock_client, streams)
+
+            self.assertTrue(any("customers" in msg for msg in log_ctx.output))
+            self.assertEqual({s["tap_stream_id"] for s in streams}, {"events"})
+        finally:
+            STREAMS["customers"].check_access = original_check_customers
+
+
+class TestCheckAccessMethod(unittest.TestCase):
+    """Tests for Stream.check_access()."""
+
+    def test_check_access_returns_true_on_success(self):
+        mock_client = MagicMock()
+        stream = STREAMS["customers"](client=mock_client)
+        self.assertTrue(stream.check_access())
+        mock_client._fetch_page.assert_called_once()
+
+    def test_check_access_returns_false_on_403(self):
+        mock_client = MagicMock()
+        mock_client._fetch_page.side_effect = ChargifyForbiddenError("403 Forbidden")
+        stream = STREAMS["customers"](client=mock_client)
+        self.assertFalse(stream.check_access())
+
+    def test_check_access_uses_product_families_path_for_products(self):
+        mock_client = MagicMock()
+        mock_client.uri = "https://test.chargify.com/"
+        stream = STREAMS["products"](client=mock_client)
+        stream.check_access()
+        called_url = mock_client._fetch_page.call_args[0][0]
+        self.assertIn("product_families", called_url)
+
+    def test_check_access_uses_correct_path_for_direct_streams(self):
+        mock_client = MagicMock()
+        mock_client.uri = "https://test.chargify.com/"
+        for name in ["customers", "subscriptions", "transactions", "statements", "invoices", "events"]:
+            stream = STREAMS[name](client=mock_client)
+            mock_client._fetch_page.reset_mock()
+            stream.check_access()
+            called_url = mock_client._fetch_page.call_args[0][0]
+            self.assertIn(name, called_url, f"URL for stream '{name}' should contain the stream name")
+
