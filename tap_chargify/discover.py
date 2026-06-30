@@ -40,13 +40,13 @@ def _apply_access_checks(client, streams):
     Probe each stream for read access and remove inaccessible streams in place.
     Raises ChargifyForbiddenError if no streams are accessible.
     """
-    inaccessible = [
+    inaccessible_streams = [
         s['tap_stream_id']
         for s in streams
         if not STREAMS[s['tap_stream_id']](client=client).check_access()
     ]
 
-    streams[:] = [s for s in streams if s['tap_stream_id'] not in inaccessible]
+    streams[:] = [s for s in streams if s['tap_stream_id'] not in inaccessible_streams]
 
     _prune_inaccessible_children(streams)
 
@@ -54,10 +54,10 @@ def _apply_access_checks(client, streams):
         raise ChargifyForbiddenError(
             "HTTP-error-code: 403, Error: The credentials do not have 'read' access to any supported streams."
         )
-    elif inaccessible:
+    elif inaccessible_streams:
         LOGGER.warning(
             "No 'read' access to stream(s): %s. Excluded from catalog.",
-            ", ".join(inaccessible),
+            ", ".join(inaccessible_streams),
         )
 
 

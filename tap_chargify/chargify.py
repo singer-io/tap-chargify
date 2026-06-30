@@ -22,6 +22,11 @@ class ChargifyForbiddenError(Exception):
     pass
 
 
+class ChargifyUnauthorizedError(Exception):
+    """Raised when the Chargify API returns HTTP 401 Unauthorized."""
+    pass
+
+
 def giveup(exc):
     """Backoff giveup predicate: return True to stop retrying, False to keep retrying.
 
@@ -85,6 +90,10 @@ class Chargify(object):
     """
     logger.info("GET request to %s", url)
     response = requests.get(url, stream=stream, auth=HTTPBasicAuth(self.api_key, 'x'))
+    if response.status_code == 401:
+        raise ChargifyUnauthorizedError(
+            "HTTP-error-code: 401, Error: Invalid credentials. Please verify your api_key and subdomain."
+        )
     if response.status_code == 403:
         raise ChargifyForbiddenError(
             "HTTP-error-code: 403, Error: {}".format(response.text)
@@ -118,6 +127,20 @@ class Chargify(object):
   # 
   # Methods to retrieve data per stream/resource.
   # 
+
+  def verify_credentials(self):
+    """Probe the API to confirm credentials are valid.
+
+    A 200 or 403 response both confirm the credentials are recognised by the
+    API (403 means valid creds, just no permission for that resource).
+    Only a 401 means the credentials are wrong.
+    Raises ChargifyUnauthorizedError if the api_key or subdomain is invalid.
+    """
+    url = "{uri}customers.json?page=1&per_page=1".format(uri=self.uri)
+    try:
+        self._fetch_page(url, stream=False)
+    except ChargifyForbiddenError:
+        pass  # 403 = valid credentials, insufficient permission for this resource
 
   def customers(self, bookmark=None):
     for i in self.get("customers.json"):

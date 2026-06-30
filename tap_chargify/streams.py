@@ -77,6 +77,7 @@ class Stream():
             return False
 
 
+    def is_session_bookmark_old(self, value):
         if self.session_bookmark is None:
             return True
         return utils.strptime_with_tz(value) > utils.strptime_with_tz(self.session_bookmark)
@@ -166,28 +167,29 @@ class ProductFamilies(Stream):
     replication_method = "FULL_TABLE"
 
 
-class Products(Stream):
+class ProductFamilyStream(Stream):
+    """Base for streams whose access is verified via the product_families endpoint."""
+    check_access_path = "product_families"
+
+
+class Products(ProductFamilyStream):
     name = "products"
     replication_method = "FULL_TABLE"
-    check_access_path = "product_families"
 
 
-class PricePoints(Stream):
+class PricePoints(ProductFamilyStream):
     name = "price_points"
     replication_method = "FULL_TABLE"
-    check_access_path = "product_families"
 
 
-class Coupons(Stream):
+class Coupons(ProductFamilyStream):
     name = "coupons"
     replication_method = "FULL_TABLE"
-    check_access_path = "product_families"
 
 
-class Components(Stream):
+class Components(ProductFamilyStream):
     name = "components"
     replication_method = "FULL_TABLE"
-    check_access_path = "product_families"
 
 
 class Subscriptions(Stream):
