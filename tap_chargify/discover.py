@@ -19,18 +19,18 @@ def _prune_inaccessible_children(streams):
     Remove child streams from the catalog whose parent stream was excluded.
     Mutates the streams list in place.
     """
-    accessible_names = {s['tap_stream_id'] for s in streams}
+    accessible_streams = {s['tap_stream_id'] for s in streams}
     to_remove = [
         s['tap_stream_id']
         for s in streams
         if STREAMS[s['tap_stream_id']].parent and
-           STREAMS[s['tap_stream_id']].parent not in accessible_names
+           STREAMS[s['tap_stream_id']].parent not in accessible_streams
     ]
-    for name in to_remove:
+    for stream in to_remove:
         LOGGER.warning(
             "Stream '%s' excluded from catalog because its parent stream '%s' is not accessible.",
-            name,
-            STREAMS[name].parent,
+            stream,
+            STREAMS[stream].parent,
         )
     streams[:] = [s for s in streams if s['tap_stream_id'] not in to_remove]
 
