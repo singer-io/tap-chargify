@@ -17,7 +17,9 @@ setup(
         'dev': [
             'pylint',
             'ipdb',
-            'pytest'
+            'pytest',
+            'pytest-cov',
+            'coverage',
         ]
     },
     entry_points="""

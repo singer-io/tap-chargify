@@ -17,7 +17,7 @@ from tap_chargify.context import Context
 from tap_chargify.chargify import ChargifyForbiddenError
 
 
-logger = singer.get_logger()
+LOGGER = singer.get_logger()
 KEY_PROPERTIES = ['id']
 
 
@@ -61,19 +61,29 @@ class Stream():
             return True
 
         path = self.check_access_path or self.name
+        cache = getattr(self.client, "_access_check_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            setattr(self.client, "_access_check_cache", cache)
+
+        if path in cache:
+            return cache[path]
+
         url = "{uri}{path}.json?page=1&per_page=1".format(
             uri=self.client.uri, path=path
         )
 
         try:
             self.client._fetch_page(url, stream=False)
+            cache[path] = True
             return True
         except ChargifyForbiddenError as exc:
-            logger.warning(
-                "Permission Error: Stream '%s' - %s",
-                self.name,
-                exc,
+            LOGGER.warning(
+                "Unauthorized Stream: %s, excluding from catalog. HTTP-Error-Message: '%s'",
+                getattr(self, "tap_stream_id", self.name),
+                str(exc),
             )
+            cache[path] = False
             return False
 
 

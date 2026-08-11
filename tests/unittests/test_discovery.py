@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
+from unittest.mock import patch
 
 from tap_chargify.chargify import ChargifyForbiddenError
 from tap_chargify.discover import (
@@ -11,6 +12,8 @@ from tap_chargify.discover import (
     _prune_inaccessible_children,
 )
 from tap_chargify.streams import STREAMS
+from tap_chargify.streams import Stream, Invoices, epoch_to_datetime_string
+from tap_chargify.context import Context
 
 
 class TestDiscoveryHelpers(unittest.TestCase):
@@ -94,7 +97,7 @@ class TestApplyAccessChecks(unittest.TestCase):
 
             with self.assertRaises(ChargifyForbiddenError) as ctx:
                 _apply_access_checks(mock_client, streams)
-            self.assertIn("403", str(ctx.exception))
+            self.assertIn("No streams are accessible", str(ctx.exception))
         finally:
             for name, cls in STREAMS.items():
                 cls.check_access = original_checks[name]
@@ -158,6 +161,20 @@ class TestCheckAccessMethod(unittest.TestCase):
             called_url = mock_client._fetch_page.call_args[0][0]
             self.assertIn(name, called_url, f"URL for stream '{name}' should contain the stream name")
 
+    def test_product_family_streams_share_single_access_probe(self):
+        mock_client = MagicMock()
+        mock_client.uri = "https://test.chargify.com/"
+        streams = [
+            {"stream": n, "tap_stream_id": n, "schema": {}, "metadata": []}
+            for n in ["products", "price_points", "coupons", "components"]
+        ]
+
+        _apply_access_checks(mock_client, streams)
+
+        self.assertEqual(mock_client._fetch_page.call_count, 1)
+        called_url = mock_client._fetch_page.call_args[0][0]
+        self.assertIn("product_families", called_url)
+
 
 class TestDiscoverStreamsExclusion(unittest.TestCase):
     """Integration-style tests (mock-based) verifying that discover_streams()
@@ -199,4 +216,112 @@ class TestDiscoverStreamsExclusion(unittest.TestCase):
         finally:
             for name, cls in STREAMS.items():
                 cls.check_access = original_checks[name]
+
+
+class DummyStream(Stream):
+    name = "dummy"
+    replication_method = "INCREMENTAL"
+    replication_key = "updated_at"
+
+
+class DummyFullTableStream(Stream):
+    name = "dummy_full"
+    replication_method = "FULL_TABLE"
+
+
+class TestAdditionalDiscoveryAndStreamCoverage(unittest.TestCase):
+    def setUp(self):
+        Context.config = {"start_date": "2020-01-01T00:00:00Z"}
+
+    def test_prune_inaccessible_children_logs_and_removes(self):
+        original = STREAMS.get("child_test")
+
+        class ChildStream:
+            parent = "missing_parent"
+
+        STREAMS["child_test"] = ChildStream
+        streams = [{"tap_stream_id": "child_test"}, {"tap_stream_id": "customers"}]
+
+        try:
+            with self.assertLogs(level="WARNING"):
+                _prune_inaccessible_children(streams)
+            self.assertEqual([s["tap_stream_id"] for s in streams], ["customers"])
+        finally:
+            if original is None:
+                del STREAMS["child_test"]
+            else:
+                STREAMS["child_test"] = original
+
+    def test_discover_streams_users_dynamic_fields_branch(self):
+        original = STREAMS.get("users")
+
+        class UsersStream:
+            name = "users"
+
+            def __init__(self, client):
+                self.client = client
+
+            def load_schema(self):
+                return {"properties": {"id": {"type": ["null", "integer"]}}}
+
+            def load_metadata(self):
+                return []
+
+        STREAMS["users"] = UsersStream
+        mock_client = MagicMock()
+        mock_client.get_user_fields.return_value = {"fields": {"id": "string"}}
+
+        try:
+            with patch("tap_chargify.discover._apply_access_checks"):
+                streams = discover_streams(mock_client)
+            users_schema = next(s["schema"] for s in streams if s["tap_stream_id"] == "users")
+            self.assertIn("id", users_schema["properties"])
+        finally:
+            if original is None:
+                del STREAMS["users"]
+            else:
+                STREAMS["users"] = original
+
+    def test_merge_updates_existing_key(self):
+        left = {"properties": {"a": "left"}}
+        right = {"properties": {"a": "right"}}
+        merged = merge(left, right)
+        self.assertEqual(merged["properties"]["a"], "left")
+
+    def test_epoch_to_datetime_string_helper_paths(self):
+        self.assertEqual(epoch_to_datetime_string("already-date"), "already-date")
+        self.assertTrue(isinstance(epoch_to_datetime_string(0), str))
+
+    def test_stream_sync_paths_and_helpers(self):
+        s = Stream(client=MagicMock())
+        s.parent = "root"
+        self.assertTrue(s.check_access())
+
+        ds = DummyStream(client=MagicMock())
+        ds.session_bookmark = "2026-01-01T00:00:00Z"
+        self.assertFalse(ds.is_session_bookmark_old("2025-01-01T00:00:00Z"))
+
+        ds.session_bookmark = None
+        ds.update_session_bookmark("2025-01-01T00:00:00Z")
+        self.assertIsNotNone(ds.session_bookmark)
+
+        ds.stream = "dummy_stream"
+        client = MagicMock()
+        client.dummy.return_value = [
+            {"updated_at": "2020-01-01T00:00:00Z", "id": 1},
+            {"updated_at": "2020-01-02T00:00:00Z", "id": 2},
+        ]
+        ds.client = client
+        state = {"bookmarks": {"dummy": {"updated_at": "2020-01-01T00:00:00Z"}}}
+        rows = list(ds.sync(state))
+        self.assertEqual(rows, [("dummy_stream", {"updated_at": "2020-01-02T00:00:00Z", "id": 2})])
+
+        ft = DummyFullTableStream(client=MagicMock())
+        ft.stream = "full_stream"
+        ft.client.dummy_full.return_value = [{"id": 1}, {"id": 2}]
+        rows = list(ft.sync({}))
+        self.assertEqual(rows, [("full_stream", {"id": 1}), ("full_stream", {"id": 2})])
+
+    def test_invoice_to_date_str_none(self):
+        self.assertIsNone(Invoices._to_date_str(None))
 

@@ -51,11 +51,11 @@ def _apply_access_checks(client, streams):
 
     if not streams:
         raise ChargifyForbiddenError(
-            "HTTP-error-code: 403, Error: The credentials do not have 'read' access to any supported streams."
+            "No streams are accessible. Ensure the credentials have read permission for at least one stream."
         )
     elif inaccessible_streams:
         LOGGER.warning(
-            "No 'read' access to stream(s): %s. Excluded from catalog.",
+        "Unauthorized streams excluded from catalog: %s",
             ", ".join(inaccessible_streams),
         )
 
