@@ -32,6 +32,7 @@ def _prune_inaccessible_children(streams):
             STREAMS[stream].parent,
         )
     streams[:] = [s for s in streams if s['tap_stream_id'] not in to_remove]
+    return to_remove
 
 
 def _apply_access_checks(client, streams):
@@ -47,15 +48,15 @@ def _apply_access_checks(client, streams):
 
     streams[:] = [s for s in streams if s['tap_stream_id'] not in inaccessible_streams]
 
-    _prune_inaccessible_children(streams)
+    inaccessible_streams.extend(_prune_inaccessible_children(streams))
 
     if not streams:
         raise ChargifyForbiddenError(
             "No streams are accessible. Ensure the credentials have read permission for at least one stream."
         )
-    elif inaccessible_streams:
+    if inaccessible_streams:
         LOGGER.warning(
-        "Unauthorized streams excluded from catalog: %s",
+            "Unauthorized streams excluded from catalog: %s",
             ", ".join(inaccessible_streams),
         )
 
@@ -177,4 +178,3 @@ def merge(left, right):
       merged[table_key] = right[table_key]
 
   return merged
-

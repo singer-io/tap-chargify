@@ -132,6 +132,47 @@ class TestApplyAccessChecks(unittest.TestCase):
         finally:
             STREAMS["customers"].check_access = original_check_customers
 
+    def test_all_inaccessible_raises_with_no_warning(self):
+        """When ALL streams fail access check, ChargifyForbiddenError is raised
+        and the 'Unauthorized streams excluded' warning is NOT emitted (error takes precedence)."""
+        mock_client = MagicMock()
+        streams = self._make_streams(["customers", "events"])
+
+        original_checks = {name: cls.check_access for name, cls in STREAMS.items()}
+        try:
+            for cls in STREAMS.values():
+                cls.check_access = lambda self_inner: False
+
+            with self.assertRaises(ChargifyForbiddenError) as ctx:
+                _apply_access_checks(mock_client, streams)
+            self.assertIn("No streams are accessible", str(ctx.exception))
+        finally:
+            for name, cls in STREAMS.items():
+                cls.check_access = original_checks[name]
+
+    def test_inaccessible_warning_lists_all_excluded_streams(self):
+        """The warning message contains every excluded stream name."""
+        mock_client = MagicMock()
+        streams = self._make_streams(["customers", "subscriptions", "events"])
+
+        original_check_customers = STREAMS["customers"].check_access
+        original_check_subscriptions = STREAMS["subscriptions"].check_access
+        try:
+            STREAMS["customers"].check_access = lambda self_inner: False
+            STREAMS["subscriptions"].check_access = lambda self_inner: False
+
+            with self.assertLogs(level="WARNING") as log_ctx:
+                _apply_access_checks(mock_client, streams)
+
+            combined = " ".join(log_ctx.output)
+            self.assertIn("customers", combined)
+            self.assertIn("subscriptions", combined)
+            # The only remaining accessible stream should be events
+            self.assertEqual([s["tap_stream_id"] for s in streams], ["events"])
+        finally:
+            STREAMS["customers"].check_access = original_check_customers
+            STREAMS["subscriptions"].check_access = original_check_subscriptions
+
 
 class TestCheckAccessMethod(unittest.TestCase):
     """Tests for Stream.check_access()."""
@@ -147,6 +188,22 @@ class TestCheckAccessMethod(unittest.TestCase):
         mock_client._fetch_page.side_effect = ChargifyForbiddenError("403 Forbidden")
         stream = STREAMS["customers"](client=mock_client)
         self.assertFalse(stream.check_access())
+
+    def test_check_access_logs_warning_with_stream_name_and_error_on_403(self):
+        """check_access() logs the stream name and the HTTP error message when 403 is raised."""
+        mock_client = MagicMock()
+        error_msg = "HTTP-error-code: 403, Error: Access denied"
+        mock_client._fetch_page.side_effect = ChargifyForbiddenError(error_msg)
+        stream = STREAMS["customers"](client=mock_client)
+
+        with self.assertLogs(level="WARNING") as log_ctx:
+            result = stream.check_access()
+
+        self.assertFalse(result)
+        combined = " ".join(log_ctx.output)
+        self.assertIn("Unauthorized Stream", combined)
+        self.assertIn("customers", combined)
+        self.assertIn(error_msg, combined)
 
     def test_check_access_uses_product_families_path_for_products(self):
         mock_client = MagicMock()
