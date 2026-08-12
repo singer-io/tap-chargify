@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.0
+  * Streams the credentials cannot access (HTTP 403) are now excluded from the catalog during discovery [#61](https://github.com/singer-io/tap-chargify/pull/61)
+
 ## 2.0.1
   * Bump requests version to 2.34.2 to address security vulnerability [#59](https://github.com/singer-io/tap-chargify/pull/59)
 

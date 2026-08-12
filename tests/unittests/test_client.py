@@ -3,7 +3,12 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from tap_chargify.chargify import Chargify, giveup
+from tap_chargify.chargify import (
+    Chargify,
+    ChargifyForbiddenError,
+    ChargifyUnauthorizedError,
+    giveup,
+)
 
 
 class TestClient(unittest.TestCase):
@@ -50,6 +55,68 @@ class TestClient(unittest.TestCase):
         self.assertEqual(len(pages), 2)
         self.assertEqual(len(pages[0]["price_points"]), 100)
         self.assertEqual(len(pages[1]["price_points"]), 5)
+
+    @patch("tap_chargify.chargify.requests.get")
+    def test_fetch_page_raises_unauthorized_and_forbidden(self, mock_get):
+        client = Chargify(api_key="token", subdomain="tenant")
+
+        unauthorized = MagicMock(status_code=401)
+        forbidden = MagicMock(status_code=403, text="forbidden")
+
+        mock_get.return_value = unauthorized
+        with self.assertRaises(ChargifyUnauthorizedError):
+            client._fetch_page("https://example.com", stream=False)
+
+        mock_get.return_value = forbidden
+        with self.assertRaises(ChargifyForbiddenError):
+            client._fetch_page("https://example.com", stream=False)
+
+    def test_verify_credentials_handles_forbidden(self):
+        client = Chargify(api_key="token", subdomain="tenant")
+        with patch.object(client, "_fetch_page", side_effect=ChargifyForbiddenError("403")) as fetch:
+            client.verify_credentials()
+            fetch.assert_called_once()
+
+    def test_resource_iterators(self):
+        client = Chargify(api_key="token", subdomain="tenant")
+
+        def fake_get(path, *args, **kwargs):
+            if path == "customers.json":
+                return iter([[{"customer": {"id": 1}}]])
+            if path == "product_families.json":
+                return iter([[{"product_family": {"id": 10}}]])
+            if path == "product_families/10/products.json":
+                return iter([[{"product": {"id": 100}}]])
+            if path == "products/100/price_points.json":
+                return iter([{"price_points": [{"id": 1000}]}])
+            if path == "product_families/10/coupons.json":
+                return iter([[{"coupon": {"id": 200}}]])
+            if path == "product_families/10/components.json":
+                return iter([[{"component": {"id": 300}}]])
+            if path == "subscriptions.json":
+                return iter([[{"subscription": {"id": 400}}]])
+            if path == "transactions.json":
+                return iter([[{"transaction": {"id": 500}}]])
+            if path == "statements.json":
+                return iter([[{"statement": {"id": 600}}]])
+            if path == "invoices.json":
+                return iter([{"invoices": [{"id": 700}]}])
+            if path == "events.json":
+                return iter([[{"event": {"id": 800}}]])
+            raise AssertionError("unexpected path: {}".format(path))
+
+        with patch.object(client, "get", side_effect=fake_get):
+            self.assertEqual(list(client.customers()), [{"id": 1}])
+            self.assertEqual(list(client.product_families()), [{"id": 10}])
+            self.assertEqual(list(client.products()), [{"id": 100}])
+            self.assertEqual(list(client.price_points()), [{"id": 1000}])
+            self.assertEqual(list(client.coupons()), [{"id": 200}])
+            self.assertEqual(list(client.components()), [{"id": 300}])
+            self.assertEqual(list(client.subscriptions("2025-01-01T00:00:00Z")), [{"id": 400}])
+            self.assertEqual(list(client.transactions("2025-01-01T00:00:00Z")), [{"id": 500}])
+            self.assertEqual(list(client.statements("2025-01-01T00:00:00Z")), [{"id": 600}])
+            self.assertEqual(list(client.invoices("2025-01-01T00:00:00Z")), [{"id": 700}])
+            self.assertEqual(list(client.events()), [{"id": 800}])
 
 
 class TestGiveup(unittest.TestCase):
