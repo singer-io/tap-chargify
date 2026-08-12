@@ -49,6 +49,11 @@ class TestDiscoveryHelpers(unittest.TestCase):
         streams = discover_streams(mock_client)
 
         self.assertEqual(set(stream["tap_stream_id"] for stream in streams), set(STREAMS.keys()))
+        # Verify key_properties is present in each stream
+        for stream in streams:
+            self.assertIn("key_properties", stream)
+            self.assertIsInstance(stream["key_properties"], list)
+            self.assertTrue(len(stream["key_properties"]) > 0)
 
 
 class TestApplyAccessChecks(unittest.TestCase):
@@ -257,6 +262,7 @@ class TestAdditionalDiscoveryAndStreamCoverage(unittest.TestCase):
 
         class UsersStream:
             name = "users"
+            key_properties = ["id"]
 
             def __init__(self, client):
                 self.client = client

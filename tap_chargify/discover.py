@@ -75,7 +75,13 @@ def discover_streams(client):
       field_schema = translate_to_schema(fields)     
       schema = merge(schema, field_schema)
 
-    streams.append({'stream': s.name, 'tap_stream_id': s.name, 'schema': schema, 'metadata': s.load_metadata()})
+    streams.append({
+        'stream': s.name,
+        'tap_stream_id': s.name,
+        'key_properties': s.key_properties,
+        'schema': schema,
+        'metadata': s.load_metadata()
+    })
 
   _apply_access_checks(client, streams)
   return streams
