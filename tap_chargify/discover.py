@@ -6,8 +6,59 @@
 import os
 import json
 import singer
-import sys
 from tap_chargify.streams import STREAMS
+from tap_chargify.chargify import ChargifyForbiddenError
+
+
+LOGGER = singer.get_logger()
+
+
+def _prune_inaccessible_children(streams):
+    """
+    Remove child streams from the catalog whose parent stream was excluded.
+    Mutates the streams list in place.
+    """
+    accessible_streams = {s['tap_stream_id'] for s in streams}
+    to_remove = [
+        s['tap_stream_id']
+        for s in streams
+        if STREAMS[s['tap_stream_id']].parent and
+           STREAMS[s['tap_stream_id']].parent not in accessible_streams
+    ]
+    for stream in to_remove:
+        LOGGER.warning(
+            "Stream '%s' excluded from catalog because its parent stream '%s' is not accessible.",
+            stream,
+            STREAMS[stream].parent,
+        )
+    streams[:] = [s for s in streams if s['tap_stream_id'] not in to_remove]
+    return to_remove
+
+
+def _apply_access_checks(client, streams):
+    """
+    Probe each stream for read access and remove inaccessible streams in place.
+    Raises ChargifyForbiddenError if no streams are accessible.
+    """
+    inaccessible_streams = [
+        s['tap_stream_id']
+        for s in streams
+        if not STREAMS[s['tap_stream_id']](client=client).check_access()
+    ]
+
+    streams[:] = [s for s in streams if s['tap_stream_id'] not in inaccessible_streams]
+
+    inaccessible_streams.extend(_prune_inaccessible_children(streams))
+
+    if not streams:
+        raise ChargifyForbiddenError(
+            "No streams are accessible. Ensure the credentials have read permission for at least one stream."
+        )
+    if inaccessible_streams:
+        LOGGER.warning(
+            "Unauthorized streams excluded from catalog: %s",
+            ", ".join(inaccessible_streams),
+        )
 
 
 def discover_streams(client):
@@ -25,7 +76,15 @@ def discover_streams(client):
       field_schema = translate_to_schema(fields)     
       schema = merge(schema, field_schema)
 
-    streams.append({'stream': s.name, 'tap_stream_id': s.name, 'schema': schema, 'metadata': s.load_metadata()})
+    streams.append({
+        'stream': s.name,
+        'tap_stream_id': s.name,
+        'key_properties': s.key_properties,
+        'schema': schema,
+        'metadata': s.load_metadata()
+    })
+
+  _apply_access_checks(client, streams)
   return streams
 
 #
@@ -119,4 +178,3 @@ def merge(left, right):
       merged[table_key] = right[table_key]
 
   return merged
-

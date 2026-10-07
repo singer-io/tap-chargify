@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="tap-chargify",
-    version="2.0.1",
+    version="2.1.0",
     description="Singer.io tap for extracting Chargify data",
     author="Stitch",
     url="http://github.com/singer-io/tap-chargify",
@@ -17,7 +17,9 @@ setup(
         'dev': [
             'pylint',
             'ipdb',
-            'pytest'
+            'pytest',
+            'pytest-cov',
+            'coverage',
         ]
     },
     entry_points="""

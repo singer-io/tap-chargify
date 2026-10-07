@@ -8,7 +8,7 @@ import json
 import sys
 import singer
 from singer import metadata
-from tap_chargify.chargify import Chargify
+from tap_chargify.chargify import Chargify, ChargifyUnauthorizedError
 from tap_chargify.discover import discover_streams
 from tap_chargify.sync import sync_stream
 from tap_chargify.streams import STREAMS
@@ -81,6 +81,12 @@ def main():
 
     client = Chargify(**creds)
     Context.config = parsed_args.config
+
+    try:
+        client.verify_credentials()
+    except ChargifyUnauthorizedError as e:
+        logger.error("Authentication failed: %s", e)
+        sys.exit(1)
 
     if parsed_args.discover:
         discover(client)
